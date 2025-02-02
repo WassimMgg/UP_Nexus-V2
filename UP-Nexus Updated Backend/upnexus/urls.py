@@ -21,17 +21,19 @@ from django.conf.urls.static import static
 from users import views as user_views
 from users import views
 
+from blog import views as blog_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', user_views.register, name='register'),
     path('profile/', user_views.profile, name='profile'),
-    path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
+    path('login/', blog_views.login_view, name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('', include('blog.urls')),
     path('role-selection/', user_views.role_selection, name='role-selection'),
     path('verification-<str:role>/', user_views.role_specific_verification, name='role-specific-verification'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

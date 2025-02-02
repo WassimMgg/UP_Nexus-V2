@@ -9,12 +9,36 @@ from django.views.generic import (
 )
 from .models import Post
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+
+# @login_required : use this with any view that require auth
+
+# @login_required
+# def announcement(request):
+#     pass
 
 def home(request):
-    context = {
-        'posts': Post.objects.all()
-    }
-    return render(request, 'blog/home.html', context)
+    return render(request, 'index.html')
+
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('blog-home'))
+    
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(reverse('blog-home'))
+        else:
+            return render(request, 'Login_Page.html', {'error': 'Invalid username or password'})
+    else: # get request
+        return render(request, 'Login_Page.html')
 
 
 class PostListView(ListView):
