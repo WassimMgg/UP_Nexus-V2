@@ -1,0 +1,45 @@
+{% extends "blog/base.html" %}
+
+{% block title %}
+  Select Your Role - Up-Nexus
+{% endblock %}
+
+{% block content %}
+  <div class="role-selection-container">
+    <h2>Select Your Role</h2>
+    <p>Please choose your role from the list below. If you wish to skip, you can continue browsing the site.</p>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <!-- Display error or success messages if any -->
+      {% if messages %}
+        <div class="messages">
+          {% for message in messages %}
+            <p class="message">{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="form-group">
+        <label for="role">Choose your role:</label>
+        <select name="role" id="role" required>
+          <option value="">--Select a Role--</option>
+          <option value="freelancer">Freelancer</option>
+          <option value="incubator">Incubator</option>
+          <option value="investor">Investor</option>
+          <option value="startup">Startup</option>
+          <option value="accelerator">Accelerator</option>
+          <option value="project_holder">Project Holder</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-submit">Submit</button>
+    </form>
+
+    <!-- Skip Option -->
+    <div class="skip-option">
+      <p>If you wish to skip the role selection, <a href="{% url 'blog-home' %}">click here to continue browsing the site</a>.</p>
+    </div>
+  </div>
+{% endblock %}

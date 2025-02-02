@@ -1,0 +1,90 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="content-section">
+    <div class="media">
+      <img class="rounded-circle account-img" src="{{ user.profile.image.url }}" alt="Profile Picture">
+      <div class="media-body">
+        <h2 class="account-heading">{{ user.username }}</h2>
+        <p class="text-secondary">{{ user.email }}</p>
+      </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Profile Info</legend>
+        {{ u_form|crispy }}
+        {{ p_form|crispy }}
+      </fieldset>
+      <div class="form-group">
+        <button class="btn btn-outline-info" type="submit">Update</button>
+      </div>
+    </form>
+
+    <!-- Role Selection and Request Status -->
+    {% if not user.profile.role %}
+      <div class="border-top pt-3">
+        <small class="text-muted">
+          You haven't selected a role yet. <a href="{% url 'role-selection' %}">Choose your role now</a>.
+        </small>
+      </div>
+    {% endif %}
+
+    {% if user.profile.pending_role %}
+      <div class="border-top pt-3">
+        {% if user.profile.role_request_status == 'pending' %}
+          <small class="text-muted">
+            Your role verification request for <strong>{{ user.profile.pending_role }}</strong> is pending admin approval.
+          </small>
+        {% elif user.profile.role_request_status == 'approved' %}
+          <small class="text-success">
+            Your role verification request for <strong>{{ user.profile.role }}</strong> has been approved.
+          </small>
+          <div class="mt-2">
+            <a href="{% url 'role-selection' %}" class="btn btn-outline-secondary">Update Role Information</a>
+          </div>
+        {% elif user.profile.role_request_status == 'rejected' %}
+          <small class="text-danger">
+            Your role verification request for <strong>{{ user.profile.pending_role }}</strong> has been rejected.
+          </small>
+          <div class="mt-2">
+            <a href="{% url 'role-selection' %}" class="btn btn-outline-secondary">Submit Another Request</a>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <!-- Display Role-Specific Information -->
+    {% if user.profile.role %}
+      <div class="border-top pt-3">
+        <h4>Role Information</h4>
+        {% if user.profile.role == 'startup' %}
+          <p><strong>Company Name:</strong> {{ user.profile.company_name }}</p>
+          <p><strong>Business License:</strong> <a href="{{ user.profile.business_license.url }}" target="_blank">View File</a></p>
+        {% elif user.profile.role == 'freelancer' %}
+          <p><strong>Skills:</strong> {{ user.profile.skills }}</p>
+          <p><strong>Portfolio Link:</strong> <a href="{{ user.profile.portfolio_link }}" target="_blank">{{ user.profile.portfolio_link }}</a></p>
+          <p><strong>Resume:</strong> <a href="{{ user.profile.resume.url }}" target="_blank">View File</a></p>
+        {% elif user.profile.role == 'incubator' %}
+          <p><strong>Incubator Name:</strong> {{ user.profile.incubator_name }}</p>
+          <p><strong>Description:</strong> {{ user.profile.incubator_description }}</p>
+          <p><strong>Certificate:</strong> <a href="{{ user.profile.incubator_certificate.url }}" target="_blank">View File</a></p>
+        {% elif user.profile.role == 'accelerator' %}
+          <p><strong>Accelerator Name:</strong> {{ user.profile.accelerator_name }}</p>
+          <p><strong>Description:</strong> {{ user.profile.accelerator_description }}</p>
+          <p><strong>Certificate:</strong> <a href="{{ user.profile.accelerator_certificate.url }}" target="_blank">View File</a></p>
+        {% elif user.profile.role == 'investor' %}
+          <p><strong>Investment Focus:</strong> {{ user.profile.investment_focus }}</p>
+          <p><strong>Investment Stage:</strong> {{ user.profile.investment_stage }}</p>
+          <p><strong>Certificate:</strong> <a href="{{ user.profile.investor_certificate.url }}" target="_blank">View File</a></p>
+        {% elif user.profile.role == 'project_holder' %}
+          <p><strong>Project Name:</strong> {{ user.profile.project_name }}</p>
+          <p><strong>Description:</strong> {{ user.profile.project_description }}</p>
+          <p><strong>Proposal:</strong> <a href="{{ user.profile.project_proposal.url }}" target="_blank">View File</a></p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+{% endblock content %}

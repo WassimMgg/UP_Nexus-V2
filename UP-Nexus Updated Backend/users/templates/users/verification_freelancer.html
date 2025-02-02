@@ -1,0 +1,23 @@
+{% extends "blog/base.html" %}
+{% block content %}
+  <div class="container mt-5">
+    <h2>Freelancer Verification</h2>
+    <p>Please provide the following information to verify your freelancer profile.</p>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="skills">Skills</label>
+        <input type="text" name="skills" id="skills" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="portfolio_link">Portfolio Link</label>
+        <input type="url" name="portfolio_link" id="portfolio_link" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="resume">Resume</label>
+        <input type="file" name="resume" id="resume" class="form-control-file" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+{% endblock %}

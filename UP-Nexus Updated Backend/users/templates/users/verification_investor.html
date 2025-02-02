@@ -1,0 +1,23 @@
+{% extends "blog/base.html" %}
+{% block content %}
+  <div class="container mt-5">
+    <h2>Investor Verification</h2>
+    <p>Please provide the following information to verify your investor profile.</p>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="investment_focus">Investment Focus</label>
+        <input type="text" name="investment_focus" id="investment_focus" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="investment_stage">Investment Stage</label>
+        <input type="text" name="investment_stage" id="investment_stage" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="investor_certificate">Investor Certificate</label>
+        <input type="file" name="investor_certificate" id="investor_certificate" class="form-control-file" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+{% endblock %}
