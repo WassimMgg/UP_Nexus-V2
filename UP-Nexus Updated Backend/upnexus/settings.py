@@ -59,7 +59,7 @@ ROOT_URLCONF = 'upnexus.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,7 +125,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'upnexus/static')
+    os.path.join(BASE_DIR, 'upnexus/static'),
+    os.path.join(BASE_DIR, 'blog/static')
 ]
 
 # Default primary key field type

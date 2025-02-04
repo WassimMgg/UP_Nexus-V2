@@ -10,7 +10,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     location = models.CharField(max_length=50, default="Unknown")
     event_date = models.DateTimeField(default=timezone.now)
-    attachment = models.FileField(upload_to='attachments/', blank=True, null=True)
+    image = models.ImageField(upload_to='images/',default='default.jpg',  blank=True)
 
     def __str__(self):
         return self.title

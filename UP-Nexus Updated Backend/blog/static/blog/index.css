@@ -1,0 +1,887 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+.container {
+  margin: auto;
+}
+
+html {
+  background-color: #fbfcfb;
+}
+
+.Nexus {
+  color: #ffd502;
+}
+
+.WorkflowTitle {
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.WorkflowDesc {
+  line-height: 1.6;
+  max-width: 500px;
+}
+
+@media (min-width: 1024px) {
+  .lg-w-half {
+    width: 50%;
+  }
+}
+
+.card {
+  transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+  transform: scale(1.05);
+}
+
+/*Navbar Styles*/
+
+.nav-link{
+  color: #000;
+  font-weight: 500;
+  text-decoration: none;
+}
+ .nav-link:hover{
+  color: #ffd502;
+ }
+ 
+/*Styles for user profile panel*/
+.user {
+  position: relative;
+  transition: 0.25s cubic-bezier(.25,.8,.25, 1);
+}
+.user-avatar {
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.user-avatar-edit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: rgba(0,0,0,.54) !important;
+  opacity: 0;
+  transition: opacity 0.25s cubic-bezier(.25,.8,.25, 1);
+  md-icon {
+    color: rgba(255,255,255,.87);
+  }
+}
+.user-avatar:hover {
+  transition: 0.25s cubic-bezier(.25,.8,.25, 1);
+}
+.user-avatar-edit:hover,
+.user-avatar:hover + .user-avatar-edit {
+  opacity: 1;
+}
+.user-name {
+  font-size: 24px;
+}
+.user-title {
+  color: rgba(0,0,0,.38);
+  font-weight: 500;
+  margin-top: 0;
+}
+.user-input-container {
+  box-sizing: border-box;
+  width: 100%;
+}
+.user-name,
+.user-title {
+  background-image: none !important;
+  &.md-input[disabled] {
+    color: rgba(0,0,0,.87);
+  }
+}
+@media (max-width: 599px) {
+  .user {
+    padding-right: 0;
+    margin-bottom: 16px;
+  }
+  .user-avatar {
+    width: 120px;
+    height: 120px;
+    margin-right: 16px;
+  }
+  .user-avatar-edit {
+    top: 36px;
+    left: 30px;
+  }
+  .md-toolbar-tools > md-menu {
+    padding: 0;
+  }
+}
+@media (max-width: 959px) and (min-width: 600px) {
+  .user {
+    padding-right: 24px;
+  }
+  .user-avatar {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 16px;
+  }
+  .user-avatar-edit {
+    top: 76px;
+    left: 70px;
+  }
+  .user-input-container {
+    padding-left: 8px;
+    width: 200px;
+  }
+}
+@media (min-width: 960px) {
+  .user {
+    padding-right: 24px;
+  }
+  .user-avatar {
+    width: 260px;
+    height: 260px;
+  }
+  .user-avatar-edit {
+    top: 106px;
+    left: 100px;
+  }
+  .user-input-container {
+    width: 250px;
+    text-overflow: ellipsis;
+    padding-left: 24px;
+  }
+}
+
+/* Styles for Add Event Page */
+
+/* Container for the form */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2.5rem; /* Equivalent to mt-10 in Tailwind */
+}
+
+/* Form styling */
+.event-form {
+  width: 100%;
+  max-width: 28rem; /* Equivalent to max-w-lg in Tailwind */
+  background-color: white;
+  padding: 2rem; /* Equivalent to p-8 in Tailwind */
+  border-radius: 0.5rem; /* Equivalent to rounded-lg in Tailwind */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Equivalent to shadow-lg in Tailwind */
+}
+
+/* Form title */
+.form-title {
+  font-size: 1.5rem; /* Equivalent to text-2xl in Tailwind */
+  margin-bottom: 1rem; /* Equivalent to mb-4 in Tailwind */
+  text-align: center;
+  font-weight: 600; /* Equivalent to font-semibold in Tailwind */
+  color: black;
+}
+
+/* Form fields */
+.form-field {
+  margin-bottom: 2rem; /* Equivalent to mb-8 in Tailwind */
+}
+
+/* Form labels */
+.form-label {
+  display: block;
+  color: #6b7280; /* Equivalent to text-gray-500 in Tailwind */
+  font-size: 0.875rem; /* Equivalent to text-sm in Tailwind */
+  font-weight: 700; /* Equivalent to font-bold in Tailwind */
+  margin-bottom: 0.5rem; /* Equivalent to mb-2 in Tailwind */
+}
+
+/* Form inputs */
+.event-form input,
+.event-form textarea,
+.event-form select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb; /* Default border color */
+  border-radius: 0.25rem; /* Equivalent to rounded in Tailwind */
+  font-size: 1rem;
+}
+
+/* Submit and Discard buttons */
+.form-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit-button,
+.discard-button {
+  width: 100%;
+  background-color: #eab308; /* Equivalent to bg-yellow-500 in Tailwind */
+  color: white;
+  font-weight: 700; /* Equivalent to font-bold in Tailwind */
+  padding: 0.5rem 1rem; /* Equivalent to py-2 px-4 in Tailwind */
+  border-radius: 0.25rem; /* Equivalent to rounded in Tailwind */
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.submit-button:hover,
+.discard-button:hover {
+  background-color: white;
+  color: #eab308; /* Equivalent to hover:bg-white and hover:text-yellow-500 in Tailwind */
+  border: 1px solid #eab308;
+}
+
+.discard-button {
+  margin-left: 0.5rem; /* Equivalent to mx-2 in Tailwind */
+}
+
+.custum-file-upload {
+
+  height: 200px;
+  width: 385px;
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  gap: 20px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #cacaca;
+  background-color: rgba(255, 255, 255, 1);
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0px 48px 35px -48px rgba(0,0,0,0.1);
+}
+
+.custum-file-upload .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custum-file-upload .icon svg {
+  height: 80px;
+  fill: rgba(75, 85, 99, 1);
+}
+
+.custum-file-upload .text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custum-file-upload .text span {
+  font-weight: 400;
+  color: rgba(75, 85, 99, 1);
+}
+
+.custum-file-upload input {
+  display: none;
+}
+
+/*Styles for Announcement Page*/
+
+/* Container for the Announcement Section */
+.announce-hero {
+  padding: 2rem 1rem; /* similar to py-8 px-4 */
+  max-width: 1200px; /* approximates max-w-screen-xl */
+  margin: 0 auto;
+  text-align: center;
+}
+/* Larger padding on large screens */
+@media (min-width: 1024px) {
+  .announce-hero {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
+/* Flex container for icon and title */
+.announce-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.announce-header .announce-icon {
+  font-size: 3rem; /* adjust as necessary */
+  color: #000;
+  padding: 0 1rem;
+}
+.announce-header .title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #000;
+}
+@media (min-width: 768px) {
+  .announce-header .title {
+    font-size: 2.5rem;
+  }
+}
+
+/* Description paragraph styling */
+.announce-description {
+  margin: 1.5rem 0;
+  font-size: 1.125rem;
+  color: #000;
+  padding: 0 1rem;
+}
+@media (min-width: 1024px) {
+  .announce-description {
+    padding: 0 3rem;
+  }
+}
+
+/* Button styling */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #ffd502;  /* yellow-500 */
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin: 0 10px;
+}
+.btn:hover {
+  background-color: #fff;
+  color: #ffd502;
+}
+
+/* Section Heading for Recent Events */
+.section-heading {
+  text-align: center;
+  margin: 2rem auto;
+  font-size: 1.875rem;  /* text-3xl */
+}
+
+/* Container for the Post Cards */
+.posts-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+/* Center the container on small screens */
+@media (max-width: 640px) {
+  .posts-container {
+    justify-content: center;
+  }
+}
+
+/* Post Card styling */
+.card-container {
+  display: flex;
+  width: 1340px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: auto;
+}
+.card {
+  margin: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  width: 400px;
+}
+.card-header img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.card-body h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+.card-body h2 a{
+  text-decoration: none;
+}
+
+.card-body h2 a:hover{
+  color: #ffd502;
+}
+.card-body div{
+  display: flex;
+  align-items: center;
+  margin-bottom: 13px;
+}
+.card-body div span{
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.card-body div i{
+  font-size: 18px;
+  font-weight: 800;
+  margin-right: 5px;
+}
+
+ .profile-card{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+ }
+
+.card-body p {
+  font-size: 13px;
+  margin: 0 0 40px;
+}
+.card .card-user {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  width: 100%;
+}
+
+.card  .card-user img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+
+
+/*Styles forLogout page*/
+
+.logout-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Full viewport height */
+  text-align: center;
+}
+
+/* Heading Style */
+.logout-container h2 {
+  font-size: 2rem;
+  color: #333; /* Dark gray text */
+  margin-bottom: 1rem;
+}
+
+/* Login Prompt */
+.login-prompt {
+  margin-top: 1rem;
+}
+
+.login-prompt small {
+  font-size: 1rem;
+  color: #6c757d; /* Gray text */
+}
+
+.login-prompt a {
+  color: #007bff; /* Blue link */
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.login-prompt a:hover {
+  color: #0056b3; /* Darker blue on hover */
+  text-decoration: underline;
+}
+
+/*Back button*/
+.back-button {
+  display: inline-block;
+  background-color: white;
+  text-align: center;
+  width: 192px;
+  border-radius: 28px;
+  height: 56px;
+  position: relative;
+  color: black;
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.back-button  a{
+  text-decoration: none;
+  color: black;
+}
+.icon {
+  background-color: #ffd502;
+  border-radius: 16px;
+  height: 48px;
+  width: 25%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  z-index: 10;
+  transition: width 0.5s;
+}
+
+.back-button:hover .icon {
+  width: 184px;
+}
+
+.text {
+  transform: translateX(8px);
+}
+
+.back-button:hover .text {
+  transform: translateX(0);
+}
+
+svg {
+  height: 25px;
+  width: 25px;
+}
+
+/*Styles for Post details Page*/
+
+.post-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+.post-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.post-content-details{
+  min-width: 200px;
+  margin-left:20px;
+}
+.post-content-details div{
+  margin-bottom: 10px;
+}
+
+.post-content-details div i{
+  font-size: 18px;
+  font-weight: 800;
+  margin-right: 10px;
+}
+.post-content-details div span{
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.edit-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none !important;
+}
+
+.edit-svgIcon {
+  width: 17px;
+  transition-duration: 0.3s;
+}
+
+.edit-svgIcon path {
+  fill: white;
+}
+
+.edit-button:hover {
+  width: 120px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: #ffd502;
+  align-items: center;
+}
+
+.edit-button:hover .edit-svgIcon {
+  width: 20px;
+  transition-duration: 0.3s;
+  transform: translateY(60%);
+  -webkit-transform: rotate(360deg);
+  -moz-transform: rotate(360deg);
+  -o-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  transform: rotate(360deg);
+}
+
+.edit-button::before {
+  display: none;
+  content: "Edit";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.edit-button:hover::before {
+  display: block;
+  padding-right: 10px;
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(0px);
+  transition-duration: 0.3s;
+}
+
+/* From Uiverse.io by vinodjangid07 */ 
+.delete-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: .3s;
+  overflow: hidden;
+  position: relative;
+}
+
+.svgIcon {
+  width: 12px;
+  transition-duration: .3s;
+}
+
+.svgIcon path {
+  fill: white;
+}
+
+.delete-button:hover {
+  width: 140px;
+  border-radius: 50px;
+  transition-duration: .3s;
+  background-color: rgb(255, 69, 69);
+  align-items: center;
+}
+
+.delete-button:hover .svgIcon {
+  width: 50px;
+  transition-duration: .3s;
+  transform: translateY(60%);
+}
+
+.delete-button::before {
+  position: absolute;
+  top: -20px;
+  content: "Delete";
+  color: white;
+  transition-duration: .3s;
+  font-size: 2px;
+}
+
+.delete-button:hover::before {
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(30px);
+  transition-duration: .3s;
+}
+.post-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  margin-bottom: 15px;
+}
+
+.edit-delete-buttons a{
+  text-decoration: none;
+  color: white;
+  margin: 0 10px;
+}
+
+/* Styles for the Edit Post Page */
+/* Ensure the base container centers its content */
+.event-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form title */
+.form-title, .article-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+/* Styling form elements */
+.form-group, .form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.form-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+.form-control, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* File upload styling */
+/* From Uiverse.io by escannord */ 
+.file-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 440px;
+  margin: 20px auto;
+}
+
+/* Custom File Upload Button */
+.custom-file-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  border: 2px dashed #000;
+  border-radius: 8px;
+  background-color: #fafafa;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+}
+
+/* Hover Effect */
+.custom-file-upload:hover {
+  border-color: #ffd502;
+  background-color: #f0f8ff;
+}
+
+/* Upload Icon */
+.upload-icon {
+  margin-bottom: 10px;
+}
+
+/* Upload Text */
+.upload-text {
+  font-weight: bold;
+  color: #ffd502;
+}
+
+/* Hide the default file input */
+.input-image {
+  display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .custom-file-upload {
+      max-width: 100%;
+      padding: 15px;
+  }
+}
+
+
+/* Button styling */
+.EditPage-Button {
+  border: none;
+  display: block;
+  position: relative;
+  padding: 10px 20px;
+  font-size: 18px;
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  color: #ffd502;
+  z-index: 1;
+  font-family: inherit;
+  font-weight: 500;
+  margin: 0 10px;
+}
+
+.EditPage-Button span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: -1;
+  border: 4px solid #ffd502;
+}
+
+.EditPage-Button span::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 8%;
+  height: 500%;
+  background: var(--lightgray);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-60deg);
+  transition: all 0.3s;
+}
+
+.EditPage-Button:hover span::before {
+  transform: translate(-50%, -50%) rotate(-90deg);
+  width: 100%;
+  background: #ffd502;
+}
+
+.EditPage-Button:hover , .EditPage-Button a:hover {
+  color: white;
+}
+
+.EditPage-Button:active span::before {
+  background:#ffd502;
+}
+
+.EditPage-Button a{
+  text-decoration: none;
+  color: #ffd502;
+}

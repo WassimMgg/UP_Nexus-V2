@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.urls import reverse
 from .forms import (
     UserRegisterForm,
@@ -14,19 +14,48 @@ from .forms import (
     InvestorVerificationForm,
     ProjectHolderVerificationForm
 )
+from django.http import HttpResponseRedirect
 from .models import Profile, RoleRequest
+from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
+
+from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('blog-home'))
+
+    if request.method == 'POST':
+        username = request.POST.get('username')  # Use .get() to avoid KeyError
+        password = request.POST.get('password')  # Use .get() to avoid KeyError
+
+        if username and password:  # Ensure both fields are provided
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect(reverse('blog-home'))
+            else:
+                return render(request, 'users/Login_Page.html', {'error': 'Invalid username or password'})
+        else:
+            return render(request, 'users/Login_Page.html', {'error': 'Username and password are required'})
+    else:
+        return render(request, 'users/Login_Page.html')
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            username = form.cleaned_data.get('username')
-            login(request, user)
-            messages.success(request, f'Your account has been created! Choose your role or skip.')
-            return redirect('role-selection')
+            user = form.save()  # Save the user and profile
+            login(request, user)  # Log the user in after registration
+            messages.success(request, 'Your account has been created! You are now logged in.')
+            return redirect('role-selection')  # Redirect to the home page or another page
+        else:
+            # Print form errors for debugging
+            print(form.errors)
+            messages.error(request, 'There was an error with your registration. Please check the form.')
     else:
         form = UserRegisterForm()
-    return render(request, 'users/register.html', {'form': form})
+    
+    # Pass the form to the template for rendering
+    return render(request, 'users/Login_Page.html', {'form': form})
 
 def role_selection(request):
     if request.method == 'POST':
@@ -45,9 +74,6 @@ def role_selection(request):
 
     return render(request, 'users/role_selection.html')
 
-from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
-
-from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
 
 @login_required
 def role_specific_verification(request, role):
@@ -93,22 +119,24 @@ def role_specific_verification(request, role):
 
     return render(request, f'users/verification_{role}.html', {'form': form, 'role': role})
 
+
 @login_required
 def profile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            messages.success(request, 'Your profile has been updated!')
+            messages.success(request, 'Your profile has been updated successfully!')
             return redirect('profile')
+
     else:
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
 
-    context = {
+    return render(request, 'users/UserProfile.html', {
         'u_form': u_form,
         'p_form': p_form,
-    }
-    return render(request, 'users/profile.html', context)
+    })

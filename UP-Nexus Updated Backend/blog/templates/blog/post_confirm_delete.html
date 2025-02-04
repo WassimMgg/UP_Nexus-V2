@@ -1,16 +1,107 @@
-{% extends "blog/base.html" %}
+{% extends "blog/base/base.html" %}
 {% block content %}
-    <div class="content-section">
-        <form method="POST">
+
+<style>
+    .delete-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 80vh;
+        padding: 2rem;
+    }
+
+    .confirmation-box {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2.5rem;
+        max-width: 600px;
+        width: 100%;
+        border: 1px solid #eaeaea;
+        text-align: center;
+    }
+
+    .danger-heading {
+        color: #dc3545;
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    .post-title {
+        color: #2d3748;
+        font-size: 1.4rem;
+        margin: 1.5rem 0;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 6px;
+        word-break: break-word;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+        padding: 0.8rem 2rem;
+        border-radius: 6px;
+        border: none;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .btn-delete:hover {
+        background: #fff;
+        transform: translateY(-1px);
+        color:#dc3545;
+
+    }
+
+    .btn-cancel {
+        text-decoration: none !important;
+        background: #6c757d;
+        color: white;
+        padding: 0.8rem 2rem;
+        border-radius: 6px;
+        border: none;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-weight: 600;
+        
+
+    }
+
+    .btn-cancel:hover {
+        background: #fff;
+        transform: translateY(-1px);
+        color:#6c757d
+    }
+</style>
+
+<div class="delete-container">
+    <div class="confirmation-box">
+        <form method="POST" action="">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Delete Post</legend>
-                <h2>Are you sure you want to delete the post "{{ object.title }}"</h2>
+                <legend class="danger-heading">Delete Post</legend>
+                <div class="post-title">
+                    Are you sure you want to delete the post:<br>
+                    <strong>"{{ post.title }}"</strong>?
+                </div>
             </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
-                <a class="btn btn-outline-secondary" href="{% url 'post-detail' object.id %}">Cancel</a>
+            <div class="button-group">
+                <button class="btn-delete" type="submit">Confirm Delete</button>
+                <a class="btn-cancel" href="{% url 'post-detail' post.id %}">Cancel</a>
             </div>
         </form>
     </div>
+</div>
+
 {% endblock content %}

@@ -39,113 +39,8 @@ html {
   transform: scale(1.05);
 }
 
-.custum-file-upload {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 15px;
-  border: 2px dashed black; /* Purple border */
-  border-radius: 8px;
-  background-color: #f9fafb; /* Light gray background */
-  cursor: pointer;
-  margin-bottom: 20px;
-}
-.custum-file-upload .icon svg {
-  width: 24px;
-  height: 24px;
-  fill: black; /* Purple fill */
-}
-.custum-file-upload .text span {
-  color: black; /* Purple text */
-  font-weight: bold;
-}
-.custum-file-upload input[type="file"] {
-  display: none; /* Hide the default file input */
-}
+/*Navbar Styles*/
 
-.popup {
-  position: fixed;
-  top: -100vh;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  transition: top 0ms ease-in-out 300ms;
-}
-
-.popup.active {
-  position: fixed;
-  left: 0;
-  top: 0;
-  transition: top 0ms ease-in-out 0ms;
-}
-
-.popup .overlay {
-  opacity: 0;
-  transition: opacity 300ms ease-in-out;
-  z-index: 1000;
-}
-
-.popup.active .overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  opacity: 1;
-  top: -10%;
-  height: 110vh;
-}
-
-.popup .popup-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  width: 95%;
-  max-width: 500px;
-  background: #fff;
-  padding: 25px;
-  border-radius: 20px;
-  opacity: 0;
-  box-shadow: 0px 2px 2px 5px rgba(0, 0, 0, 0.05);
-  transition: all 300ms ease-in-out;
-  z-index: 1001;
-  text-align: left;
-}
-
-.popup.active .popup-content {
-  transform: translate(-50%, -50%) scale(1);
-  opacity: 1;
-}
-
-.read-more-popup-content {
-  position: absolute;
-  top: 49%;
-  left: 60%;
-  transform: translate(-50%, -50%) scale(0.9);
-  width: 95%;
-  max-width: 800px;
-  height: 80vh;
-  background: #fff;
-  padding: 25px;
-  border-radius: 20px;
-  opacity: 0;
-  box-shadow: 0px 2px 2px 5px rgba(0, 0, 0, 0.05);
-  transition: all 300ms ease-in-out;
-  z-index: 1001;
-  text-align: left;
-  overflow: hidden;
-  overflow-y: auto;
-  scrollbar-gutter: stable both-edges;
-}
-
-.popup.active .read-more-popup-content {
-  transform: translate(-50%, -50%) scale(1);
-  opacity: 1;
-}
 
 /*Styles for user profile panel*/
 .user {
@@ -249,3 +144,319 @@ html {
     padding-left: 24px;
   }
 }
+
+/* Styles for Add Event Page */
+
+/* Container for the form */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2.5rem; /* Equivalent to mt-10 in Tailwind */
+}
+
+/* Form styling */
+.event-form {
+  width: 100%;
+  max-width: 28rem; /* Equivalent to max-w-lg in Tailwind */
+  background-color: white;
+  padding: 2rem; /* Equivalent to p-8 in Tailwind */
+  border-radius: 0.5rem; /* Equivalent to rounded-lg in Tailwind */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Equivalent to shadow-lg in Tailwind */
+}
+
+/* Form title */
+.form-title {
+  font-size: 1.5rem; /* Equivalent to text-2xl in Tailwind */
+  margin-bottom: 1rem; /* Equivalent to mb-4 in Tailwind */
+  text-align: center;
+  font-weight: 600; /* Equivalent to font-semibold in Tailwind */
+  color: black;
+}
+
+/* Form fields */
+.form-field {
+  margin-bottom: 2rem; /* Equivalent to mb-8 in Tailwind */
+}
+
+/* Form labels */
+.form-label {
+  display: block;
+  color: #6b7280; /* Equivalent to text-gray-500 in Tailwind */
+  font-size: 0.875rem; /* Equivalent to text-sm in Tailwind */
+  font-weight: 700; /* Equivalent to font-bold in Tailwind */
+  margin-bottom: 0.5rem; /* Equivalent to mb-2 in Tailwind */
+}
+
+/* Form inputs */
+.event-form input,
+.event-form textarea,
+.event-form select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb; /* Default border color */
+  border-radius: 0.25rem; /* Equivalent to rounded in Tailwind */
+  font-size: 1rem;
+}
+
+/* Submit and Discard buttons */
+.form-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit-button,
+.discard-button {
+  width: 100%;
+  background-color: #eab308; /* Equivalent to bg-yellow-500 in Tailwind */
+  color: white;
+  font-weight: 700; /* Equivalent to font-bold in Tailwind */
+  padding: 0.5rem 1rem; /* Equivalent to py-2 px-4 in Tailwind */
+  border-radius: 0.25rem; /* Equivalent to rounded in Tailwind */
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.submit-button:hover,
+.discard-button:hover {
+  background-color: white;
+  color: #eab308; /* Equivalent to hover:bg-white and hover:text-yellow-500 in Tailwind */
+  border: 1px solid #eab308;
+}
+
+.discard-button {
+  margin-left: 0.5rem; /* Equivalent to mx-2 in Tailwind */
+}
+
+.custum-file-upload {
+
+  height: 200px;
+  width: 385px;
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  gap: 20px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #cacaca;
+  background-color: rgba(255, 255, 255, 1);
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0px 48px 35px -48px rgba(0,0,0,0.1);
+}
+
+.custum-file-upload .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custum-file-upload .icon svg {
+  height: 80px;
+  fill: rgba(75, 85, 99, 1);
+}
+
+.custum-file-upload .text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custum-file-upload .text span {
+  font-weight: 400;
+  color: rgba(75, 85, 99, 1);
+}
+
+.custum-file-upload input {
+  display: none;
+}
+
+/*Styles for Announcement Page*/
+
+/* Container for the Announcement Section */
+.announce-hero {
+  padding: 2rem 1rem; /* similar to py-8 px-4 */
+  max-width: 1200px; /* approximates max-w-screen-xl */
+  margin: 0 auto;
+  text-align: center;
+}
+/* Larger padding on large screens */
+@media (min-width: 1024px) {
+  .announce-hero {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
+/* Flex container for icon and title */
+.announce-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.announce-header .icon {
+  font-size: 3rem; /* adjust as necessary */
+  color: #000;
+  padding: 0 1rem;
+}
+.announce-header .title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #000;
+}
+@media (min-width: 768px) {
+  .announce-header .title {
+    font-size: 2.5rem;
+  }
+}
+
+/* Description paragraph styling */
+.announce-description {
+  margin: 1.5rem 0;
+  font-size: 1.125rem;
+  color: #000;
+  padding: 0 1rem;
+}
+@media (min-width: 1024px) {
+  .announce-description {
+    padding: 0 3rem;
+  }
+}
+
+/* Button styling */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #f59e0b;  /* yellow-500 */
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.btn:hover {
+  background-color: #fff;
+  color: #f59e0b;
+}
+
+/* Section Heading for Recent Events */
+.section-heading {
+  text-align: center;
+  margin: 2rem auto;
+  font-size: 1.875rem;  /* text-3xl */
+}
+
+/* Container for the Post Cards */
+.posts-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+/* Center the container on small screens */
+@media (max-width: 640px) {
+  .posts-container {
+    justify-content: center;
+  }
+}
+
+/* Post Card styling */
+.card-container {
+  display: flex;
+  width: 1040px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: auto;
+}
+.card {
+  margin: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  width: 300px;
+}
+.card-header img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+  min-height: 250px;
+}
+
+.tag {
+  background: #cccccc;
+  border-radius: 50px;
+  font-size: 12px;
+  margin: 0;
+  color: #fff;
+  padding: 2px 10px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.tag-teal {
+  background-color: #47bcd4;
+}
+.tag-purple {
+  background-color: #5e76bf;
+}
+.tag-pink {
+  background-color: #cd5b9f;
+}
+
+.card-body p {
+  font-size: 13px;
+  margin: 0 0 40px;
+}
+.user {
+  display: flex;
+  margin-top: auto;
+}
+
+.user img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+.user-info h5 {
+  margin: 0;
+}
+.user-info small {
+  color: #545d7a;
+}
+
+/* Read More button styling */
+.read-more-btn {
+  display: inline-block;
+  margin: 1rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  text-align: center;
+  color: #fff;
+  background-color: #f59e0b;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.read-more-btn:hover {
+  background-color: #fff;
+  color: #f59e0b;
+  border: 1px solid #f59e0b;
+}
+
+/*Styles for Detail Event Page*/
+

@@ -1,0 +1,28 @@
+
+    <div class="card">
+      <div class="card-header">
+        <img src="{{post.image.url}}" alt="Post Picture" />
+      </div>
+      <div class="card-body">
+        <h2>
+          <a href="{% url 'post-detail' post.id %}">{{ post.title }}</a>
+        </h2>
+        <div>
+          <i class="fa-solid fa-calendar-days"></i> <span>{{ post.event_date  }}  </span>       
+        </div>
+        <div>
+          <i class="fa-solid fa-location-dot"></i> <span> {{ post.location }} </span>   
+        </div>
+        <div class="card-user">
+          <div class="profile-card">
+            <img src="{{ post.author.profile.image.url }}" alt="user" />
+            <h5>{{ post.author }}</h5>
+          </div>
+         
+          <div>
+            <a href="{% url 'post-detail' post.id %}"  class="btn" >Read More</a>
+          </div>
+        </div>
+        
+      </div>
+    </div>

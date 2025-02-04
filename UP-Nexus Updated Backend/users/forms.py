@@ -9,22 +9,34 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'phone_number', 'password1', 'password2']
+        fields = ['username', 'email', 'phone_number', 'password1', 'password2' ,'phone_number']
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.email = self.cleaned_data['email']  # Ensure email is saved
         if commit:
             user.save()
-            user.profile.phone_number = self.cleaned_data['phone_number']
-            user.profile.save()
+            # Create or update the profile
+            profile, created = Profile.objects.get_or_create(user=user)
+            profile.phone_number = self.cleaned_data['phone_number']
+            profile.save()
         return user
-
+    
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()
 
     class Meta:
         model = User
         fields = ['username', 'email']
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['image', 'phone_number']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        profile = self.instance
 
 class StartupVerificationForm(forms.ModelForm):
     class Meta:
@@ -65,7 +77,7 @@ class ProfileUpdateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         profile = self.instance
 
-        # Add role-specific fields dynamically
+      # Dynamically add fields based on role
         if profile.role == 'startup':
             self.fields['company_name'] = forms.CharField(max_length=100, required=False)
             self.fields['business_license'] = forms.FileField(required=False)
