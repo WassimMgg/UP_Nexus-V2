@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import Profile, RoleRequest
 from django.db import models
-from django.contrib import messages
+from django.utils.html import format_html
+from django.urls import reverse
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'role', 'pending_role', 'is_verified')
@@ -22,72 +23,71 @@ class ProfileAdmin(admin.ModelAdmin):
 
 @admin.register(RoleRequest)
 class RoleRequestAdmin(admin.ModelAdmin):
-    list_display = ('user', 'role', 'status', 'created_at', 'updated_at')
+    list_display = (
+    'user', 'role', 'status', 'created_at', 'role_specific_data_display', 'file_attachments', 'approve_button',
+    'reject_button')
     list_filter = ('status', 'role')
-    search_fields = ('user__username', 'role')
-    readonly_fields = ('role_specific_data', 'user', 'role', 'created_at', 'updated_at')
     actions = ['approve_requests', 'reject_requests']
 
+    def role_specific_data_display(self, obj):
+        """Format role-specific data nicely."""
+        if obj.role_specific_data:
+            formatted_data = "".join(
+                f"<li><strong>{key}:</strong> {value}</li>"
+                for key, value in obj.role_specific_data.items()
+            )
+            return format_html(f"<ul>{formatted_data}</ul>")
+        return "No Data"
+
+    role_specific_data_display.short_description = "Role Specific Data"
+
+    def file_attachments(self, obj):
+        """Display file links for verification documents."""
+        file_fields = {
+            'business_license': 'Business License',
+            'resume': 'Resume',
+            'incubator_certificate': 'Incubator Certificate',
+            'accelerator_certificate': 'Accelerator Certificate',
+            'investor_certificate': 'Investor Certificate',
+            'project_proposal': 'Project Proposal'
+        }
+
+        files_html = ""
+        for field, label in file_fields.items():
+            file = getattr(obj.user.profile, field, None)
+            if file:
+                files_html += f'<li><strong>{label}:</strong> <a href="{file.url}" target="_blank">Download</a></li>'
+
+        return format_html(f"<ul>{files_html}</ul>") if files_html else "No Attachments"
+
+    file_attachments.short_description = "File Attachments"
+
+    def approve_button(self, obj):
+        if obj.status == 'pending':
+            url = reverse('approve_role_request', args=[obj.id])
+            return format_html('<a class="button" href="{}">Approve</a>', url)
+        return "Approved"
+
+    def reject_button(self, obj):
+        if obj.status == 'pending':
+            url = reverse('reject_role_request', args=[obj.id])
+            return format_html('<a class="button" href="{}">Reject</a>', url)
+        return "Rejected"
+
+    approve_button.short_description = "Approve"
+    reject_button.short_description = "Reject"
+
     def approve_requests(self, request, queryset):
-        for role_request in queryset:
-            role_request.status = 'approved'
-            role_request.save()
-
-            # Update the user's profile
-            profile = role_request.user.profile
-            profile.role = role_request.role
-            profile.is_verified = True
-            profile.role_request_status = 'approved'
-
-            # Copy role-specific data from RoleRequest to Profile
-            role_specific_data = role_request.role_specific_data
-            if role_request.role == 'startup':
-                profile.company_name = role_specific_data.get('company_name')
-                if role_specific_data.get('business_license'):
-                    profile.business_license = role_specific_data['business_license']
-            elif role_request.role == 'freelancer':
-                profile.skills = role_specific_data.get('skills')
-                profile.portfolio_link = role_specific_data.get('portfolio_link')
-                if role_specific_data.get('resume'):
-                    profile.resume = role_specific_data['resume']
-            elif role_request.role == 'incubator':
-                profile.incubator_name = role_specific_data.get('incubator_name')
-                profile.incubator_description = role_specific_data.get('incubator_description')
-                if role_specific_data.get('incubator_certificate'):
-                    profile.incubator_certificate = role_specific_data['incubator_certificate']
-            elif role_request.role == 'accelerator':
-                profile.accelerator_name = role_specific_data.get('accelerator_name')
-                profile.accelerator_description = role_specific_data.get('accelerator_description')
-                if role_specific_data.get('accelerator_certificate'):
-                    profile.accelerator_certificate = role_specific_data['accelerator_certificate']
-            elif role_request.role == 'investor':
-                profile.investment_focus = role_specific_data.get('investment_focus')
-                profile.investment_stage = role_specific_data.get('investment_stage')
-                if role_specific_data.get('investor_certificate'):
-                    profile.investor_certificate = role_specific_data['investor_certificate']
-            elif role_request.role == 'project_holder':
-                profile.project_name = role_specific_data.get('project_name')
-                profile.project_description = role_specific_data.get('project_description')
-                if role_specific_data.get('project_proposal'):
-                    profile.project_proposal = role_specific_data['project_proposal']
-
-            profile.save()
-
-            # Notify the user
-            messages.success(request, f'{role_request.user.username} has been approved for the {role_request.role} role.')
+        """Bulk approve selected requests."""
+        for obj in queryset:
+            obj.status = "approved"
+            obj.user.profile.role = obj.role  # Assign role
+            obj.user.profile.is_verified = True  # Mark verified
+            obj.user.profile.save()
+            obj.save()
+        self.message_user(request, "Selected requests have been approved.")
 
     def reject_requests(self, request, queryset):
-        for role_request in queryset:
-            role_request.status = 'rejected'
-            role_request.save()
-
-            # Update the user's profile
-            profile = role_request.user.profile
-            profile.role_request_status = 'rejected'
-            profile.save()
-
-            # Notify the user
-            messages.warning(request, f'{role_request.user.username} has been rejected for the {role_request.role} role.')
-
-    approve_requests.short_description = "Approve selected role requests"
-    reject_requests.short_description = "Reject selected role requests"
+        """Bulk reject selected requests."""
+        queryset.update(status="rejected")
+        self.message_user(request, "Selected requests have been rejected.")

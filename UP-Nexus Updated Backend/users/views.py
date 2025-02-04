@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect ,get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, authenticate
 from django.urls import reverse
 from .forms import (
@@ -15,9 +16,7 @@ from .forms import (
     ProjectHolderVerificationForm
 )
 from django.http import HttpResponseRedirect
-from .models import Profile, RoleRequest
-from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
-
+from .models import  RoleRequest, Profile
 from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
 
 def login_view(request):
@@ -119,7 +118,6 @@ def role_specific_verification(request, role):
 
     return render(request, f'users/verification_{role}.html', {'form': form, 'role': role})
 
-
 @login_required
 def profile(request):
     if request.method == 'POST':
@@ -140,3 +138,50 @@ def profile(request):
         'u_form': u_form,
         'p_form': p_form,
     })
+
+
+@staff_member_required
+def approve_role(request, role_request_id):
+    role_request = get_object_or_404(RoleRequest, id=role_request_id)
+
+    # Get the user's profile
+    profile = Profile.objects.get(user=role_request.user)
+
+    # Assign the approved role
+    profile.role = role_request.role
+    profile.is_verified = True
+
+    # Transfer role-specific data from RoleRequest to Profile (excluding files)
+    for field, value in role_request.role_specific_data.items():
+        if hasattr(profile, field):  # Ensure the field exists in Profile
+            setattr(profile, field, value)
+
+    profile.save()
+
+    # Update RoleRequest status
+    role_request.status = "approved"
+    role_request.save()
+
+    messages.success(request, f"Role '{role_request.role}' has been assigned to {role_request.user.username}.")
+
+    return redirect(reverse("admin:users_rolerequest_changelist"))
+
+
+@staff_member_required
+def reject_role(request, role_request_id):
+    role_request = get_object_or_404(RoleRequest, id=role_request_id)
+
+    # Reject the role request
+    role_request.status = "rejected"
+    role_request.save()
+
+    # Show success message in Django admin
+    messages.warning(request, f"Role request for {role_request.user.username} has been rejected.")
+
+    # Redirect to the RoleRequest list in Django Admin
+    return redirect(reverse("admin:users_rolerequest_changelist"))
+
+@staff_member_required
+def admin_role_requests(request):
+    role_requests = RoleRequest.objects.all()
+    return render(request, 'admin/role_requests.html', {'role_requests': role_requests})

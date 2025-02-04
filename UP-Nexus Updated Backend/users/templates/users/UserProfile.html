@@ -201,29 +201,76 @@
                         </div>
 
                         <!-- Conditionally Render Role-Specific Fields -->
-                        {% if user.profile.role == 'startup' %}
-                            <div>
-                                <label>Company Name</label>
-                                <input type="text" name="company_name" value="{{ user.profile.company_name }}">
-                            </div>
-                            <div>
-                                <label>Business License</label>
-                                <input type="file" name="business_license">
-                            </div>
-                        {% elif user.profile.role == 'freelancer' %}
-                            <div>
-                                <label>Skills</label>
-                                <input type="text" name="skills" value="{{ user.profile.skills }}">
-                            </div>
-                            <div>
-                                <label>Portfolio Link</label>
-                                <input type="url" name="portfolio_link" value="{{ user.profile.portfolio_link }}">
-                            </div>
-                            <div>
-                                <label>Resume</label>
-                                <input type="file" name="resume">
-                            </div>
-                        {% endif %}
+                        {% if user.profile.role %}
+
+
+   {% if user.profile.role == 'startup' %}
+    <label for="company_name">Company Name:</label>
+    <input type="text" id="company_name" name="company_name" value="{{ user.profile.company_name }}">
+
+    {% if user.profile.business_license %}
+        <p><strong>Business License:</strong> <a href="{{ user.profile.business_license.url }}">Download</a></p>
+    {% endif %}
+
+{% elif user.profile.role == 'freelancer' %}
+    <label for="skills">Skills:</label>
+    <input type="text" id="skills" name="skills" value="{{ user.profile.skills }}">
+
+    <label for="portfolio_link">Portfolio:</label>
+    <input type="url" id="portfolio_link" name="portfolio_link" value="{{ user.profile.portfolio_link }}">
+
+    {% if user.profile.resume %}
+        <p><strong>Resume:</strong> <a href="{{ user.profile.resume.url }}">Download</a></p>
+    {% endif %}
+
+{% elif user.profile.role == 'investor' %}
+    <label for="investment_focus">Investment Focus:</label>
+    <input type="text" id="investment_focus" name="investment_focus" value="{{ user.profile.investment_focus }}">
+
+    <label for="investment_stage">Investment Stage:</label>
+    <input type="text" id="investment_stage" name="investment_stage" value="{{ user.profile.investment_stage }}">
+
+    {% if user.profile.investor_certificate %}
+        <p><strong>Investor Certificate:</strong> <a href="{{ user.profile.investor_certificate.url }}">Download</a></p>
+    {% endif %}
+
+{% elif user.profile.role == 'incubator' %}
+    <label for="incubator_name">Incubator Name:</label>
+    <input type="text" id="incubator_name" name="incubator_name" value="{{ user.profile.incubator_name }}">
+
+    <label for="incubator_description">Description:</label>
+    <textarea id="incubator_description" name="incubator_description">{{ user.profile.incubator_description }}</textarea>
+
+    {% if user.profile.incubator_certificate %}
+        <p><strong>Certificate:</strong> <a href="{{ user.profile.incubator_certificate.url }}">Download</a></p>
+    {% endif %}
+
+{% elif user.profile.role == 'accelerator' %}
+    <label for="accelerator_name">Accelerator Name:</label>
+    <input type="text" id="accelerator_name" name="accelerator_name" value="{{ user.profile.accelerator_name }}">
+
+    <label for="accelerator_description">Description:</label>
+    <textarea id="accelerator_description" name="accelerator_description">{{ user.profile.accelerator_description }}</textarea>
+
+    {% if user.profile.accelerator_certificate %}
+        <p><strong>Certificate:</strong> <a href="{{ user.profile.accelerator_certificate.url }}">Download</a></p>
+    {% endif %}
+
+{% elif user.profile.role == 'project_holder' %}
+    <label for="project_name">Project Name:</label>
+    <input type="text" id="project_name" name="project_name" value="{{ user.profile.project_name }}">
+
+    <label for="project_description">Description:</label>
+    <textarea id="project_description" name="project_description">{{ user.profile.project_description }}</textarea>
+
+    {% if user.profile.project_proposal %}
+        <p><strong>Project Proposal:</strong> <a href="{{ user.profile.project_proposal.url }}">Download</a></p>
+    {% endif %}
+{% endif %}
+{% else %}
+    <p>You have not selected a role yet.</p>
+{% endif %}
+
                     </fieldset>
 
                     <div class="form-actions">
@@ -234,7 +281,7 @@
                 </div>
             </div>
 
-         
+
             <div id="account-social-media" class="profile-section" style="display: none;">
                 <div class="profile-form">
                     <form method="POST">

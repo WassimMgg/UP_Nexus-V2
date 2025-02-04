@@ -32,6 +32,8 @@ urlpatterns = [
     path('', include('blog.urls')),
     path('role-selection/', user_views.role_selection, name='role-selection'),
     path('verification-<str:role>/', user_views.role_specific_verification, name='role-specific-verification'),
+    path('approve-role-request/<int:role_request_id>/', user_views.approve_role, name='approve_role_request'),
+    path('reject-role-request/<int:role_request_id>/', user_views.reject_role, name='reject_role_request'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
