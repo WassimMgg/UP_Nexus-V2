@@ -1,0 +1,150 @@
+{% load static %}
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'css/Login_Page.css' %}" />
+    <title>Login Page</title>
+    <style>
+      .alert {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+      .alert-success {
+        color: green;
+        background-color: #e6ffe6;
+        border: 1px solid green;
+      }
+      .alert-error {
+        color: red;
+        background-color: #ffe6e6;
+        border: 1px solid red;
+      }
+    </style>
+  </head>
+
+  <body>
+    
+    </div>
+  {% endif %}
+    <div class="container {% if signup_errors %}active{% endif %}" id="container">
+      <div class="form-container sign-up">
+        <form method="POST" action="{% url 'register' %}">
+          {% csrf_token %}
+          <h1>Create Account</h1>
+          <span>Use your email for registration</span>
+        
+          <!-- Username Field -->
+          <input type="text" placeholder="Username" name="username" required />
+          {% if form.username.errors %}
+            <div class="error-message" style="color: red; font-size: 12px; margin-top: 5px;">
+              {{ form.username.errors.0 }}
+            </div>
+          {% endif %}
+        
+          <!-- Email Field -->
+          <input type="email" placeholder="Email" name="email" required />
+          {% if form.email.errors %}
+            <div class="error-message" style="color: red; font-size: 12px; margin-top: 5px; text-align: start;">
+              {{ form.email.errors.0 }}
+            </div>
+          {% endif %}
+        
+          <!-- Password Field -->
+          <input type="password" placeholder="Password" name="password1" required />
+          {% if form.password1.errors %}
+            <div class="error-message" style="color: red; font-size: 12px; margin-top: 5px;">
+              {{ form.password1.errors.0 }}
+            </div>
+          {% endif %}
+        
+          <!-- Confirm Password Field -->
+          <input type="password" placeholder="Confirm Password" name="password2" required />
+          {% if form.password2.errors %}
+            <div class="error-message" style="color: red; font-size: 12px; margin-top: 5px;">
+              {{ form.password2.errors.0 }}
+            </div>
+          {% endif %}
+        
+          <!-- Phone Number Field -->
+          <input type="text" placeholder="Phone number" name="phone_number" required />
+          {% if form.phone_number.errors %}
+            <div class="error-message" style="color: red; font-size: 12px; margin-top: 5px;">
+              {{ form.phone_number.errors.0 }}
+            </div>
+          {% endif %}
+        
+          <button type="submit">Sign Up</button>
+        </form>
+      </div>
+      
+      <div class="form-container sign-in">
+        <form method="POST" action="{% url 'login' %}">
+          {% csrf_token %}
+          <h1>Sign In</h1>
+          <span>Use your email password</span>
+        
+          <!-- Username Field -->
+          <input type="text" placeholder="Username" name="username" required />
+          {% if login_errors %}
+            <div class="error-message" style="color: red; font-size: 12px; margin-top: 5px;">
+              Invalid username.
+            </div>
+          {% endif %}
+        
+          <!-- Password Field -->
+          <input type="password" placeholder="Password" name="password" required />
+          {% if login_errors %}
+            <div class="error-message" style="color: red; font-size: 12px; margin-top: 5px;">
+              Invalid password.
+            </div>
+          {% endif %}
+        
+          <button type="submit">Sign In</button>
+        </form>
+      </div>
+      <div class="toggle-container">
+        <div class="toggle">
+          <div class="toggle-panel toggle-left">
+            <h1>Welcome Back!</h1>
+            <p>Enter your personal details to use all of site features</p>
+            <button class="hidden" id="login">Sign In</button>
+          </div>
+          <div class="toggle-panel toggle-right">
+            <h1>Hello, Friend!</h1>
+            <p>
+              Register with your personal details to use all of site features
+            </p>
+            <button class="hidden" id="register">Sign Up</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const container = document.getElementById('container');
+      const registerBtn = document.getElementById('register');
+      const loginBtn = document.getElementById('login');
+
+      registerBtn.addEventListener('click', () => {
+          container.classList.add("active");
+      });
+
+      loginBtn.addEventListener('click', () => {
+          container.classList.remove("active");
+      });
+
+      // Automatically show the sign-up form if there are errors
+      {% if signup_errors %}
+        container.classList.add("active");
+      {% endif %}
+    </script>
+  </body>
+</html>

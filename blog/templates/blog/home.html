@@ -1,0 +1,266 @@
+{% extends 'blog/base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+   
+  <section>
+    <div class="container grid grid-cols-1 md:grid-cols-2 min-h-[650px] relative">
+      <div class="flex flex-col justify-center items-center py-14 md:py-0">
+        <div class="text-center md:text-left space-y-6">
+          <h1 class="text-5xl lg:text-left space-y-6 font-bold leading-relaxed xl:leading-normal">
+            Welcome to Up-<span class="text-yellow-500">Nexus</span>
+          </h1>
+          <p class="text-gray-600 xl:max-w-[500px]">
+            A vibrant ecosystem designed to bridge the gap between startups,
+            investors, and incubators. Our mission is to foster a
+            collaborative community where ideas thrive, opportunities grow,
+            and partnerships shape the future of innovation. Together, we
+            accelerate the journey from concept to success.
+          </p>
+          {% if not user.is_authenticated %}
+          <div >
+            <a href="{% url 'register' %}" class="btn ">Get Started</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="flex justify-center items-center">
+        <img
+          src="{% static 'blog/assets/HeroImage.jpg' %}"
+          alt="Hero"
+          class="w-[400px] md:w-[550px] xl:w-[700px] h-[300px] md:h-[500px] xl:h-[500px] rounded-3xl"
+        />
+      </div>
+    </div>
+  </section>
+
+  <div class="container py-24">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="space-y-4 p-6">
+        <h1 class="text-3xl md:text-4xl font-bold">
+          What we offer for you
+        </h1>
+        <p>Check our services to learn more about our platform</p>
+      </div>
+
+      <!-- Service 1: Networking Platform -->
+      <div class="p-4 space-y-4 bg-[#fbfbfb] hover:bg-white rounded-xl hover:shadow-[0_0_22px_0_rgba(0,0,0,0.15)]">
+        <div class="text-4xl">
+          <i class="fas fa-network-wired"></i>
+        </div>
+        <div>
+          <p class="text-xl font-semibold pb-4">Networking Platform</p>
+          <p>Our platform is designed to support a diverse ecosystem of users, startups, and businesses.</p>
+        </div>
+      </div>
+
+      <!-- Service 2: Community Engagement -->
+      <div class="p-4 space-y-4 bg-[#fbfbfb] hover:bg-white rounded-xl hover:shadow-[0_0_22px_0_rgba(0,0,0,0.15)]">
+        <div class="text-4xl">
+          <i class="fas fa-users"></i> <!-- Replace with appropriate icon -->
+        </div>
+        <div>
+          <p class="text-xl font-semibold pb-4">Community Engagement</p>
+          <p>Join our community to connect with other users, share ideas, and collaborate on projects.</p>
+        </div>
+      </div>
+
+      <!-- Service 3: Event and Job Announcement -->
+      <div class="p-4 space-y-4 bg-[#fbfbfb] hover:bg-white rounded-xl hover:shadow-[0_0_22px_0_rgba(0,0,0,0.15)]">
+        <div class="text-4xl">
+          <i class="fas fa-bullhorn"></i> <!-- Replace with appropriate icon -->
+        </div>
+        <div>
+          <p class="text-xl font-semibold pb-4">Event and Job Announcement</p>
+          <p>Stay up-to-date with the upcoming events, updates, and announcements from the Ecosystem.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-20 mx-auto px-4 max-w-7xl">
+    <h2 class="text-3xl sm:text-5xl lg:text-6xl text-center mt-6 tracking-wide mb-12">
+        Accelerate your <span class="Nexus">Business Workflow</span>
+    </h2>
+    
+    <div class="flex flex-wrap justify-center items-center">
+        <div class="p-2 w-full md:w-1/2 flex items-center">
+            <img src="{% static 'blog/assets/Working Flow.jpg' %}" alt="Business" class="rounded-3xl w-full h-auto">
+        </div>
+        
+        <!-- Checklist Items -->
+        <div class="pt-12 w-full lg:w-1/2 flex items-center justify-center flex-col">
+            <!-- Item 1 -->
+            <div class="flex mb-12">
+                <div class="mx-2 text-green-400 h-12 w-12 p-2 flex justify-center items-center rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle-2">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                        <path d="m9 12 2 2 4-4"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="WorkflowTitle text-xl mb-2 mt-1">
+                        Automated Task Management
+                    </h3>
+                    <p class="WorkflowDesc text-gray-500 text-md">
+                        Streamline your operations with intelligent task automation and real-time updates.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Item 2 -->
+            <div class="flex mb-12">
+                <div class="mx-2 text-green-400 h-12 w-12 p-2 flex justify-center items-center rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle-2">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                        <path d="m9 12 2 2 4-4"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="WorkflowTitle text-xl mb-2 mt-1">
+                        Team Collaboration
+                    </h3>
+                    <p class="WorkflowDesc text-gray-500 text-md">
+                        Enhance team productivity with seamless communication and file sharing.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Item 3 -->
+            <div class="flex mb-12">
+                <div class="mx-2 text-green-400 h-12 w-12 p-2 flex justify-center items-center rounded-full">
+                    <!-- Repeat the check circle icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle-2">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                        <path d="m9 12 2 2 4-4"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="WorkflowTitle text-xl mb-2 mt-1">
+                        Analytics Dashboard
+                    </h3>
+                    <p class="WorkflowDesc text-gray-500 text-md">
+                        Make data-driven decisions with comprehensive real-time analytics and more of.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <!-- <div class="mt-20 container mx-auto px-4">
+    <h2 class="text-3xl sm:text-5xl lg:text-6xl text-center my-8 tracking-wide">
+      Pricing
+    </h2>
+    <div class="flex flex-wrap">
+      Pricing Option 1 
+      <div class="w-full sm:w-1/2 lg:w-1/3 p-2">
+        <div class="p-10 border border-neutral-700 rounded-xl">
+          <p class="text-4xl mb-8">
+            Basic
+          </p>
+          <p class="mb-8">
+            <span class="text-5xl mt-6 mr-2">$10</span>
+            <span class="text-neutral-400 tracking-tight">/Month</span>
+          </p>
+          <ul>
+            <li class="mt-8 flex items-center">
+              <i class="fas fa-check-circle"></i>
+              <span class="ml-2">Feature 1</span>
+            </li>
+            <li class="mt-8 flex items-center">
+              <i class="fas fa-check-circle"></i>
+              <span class="ml-2">Feature 2</span>
+            </li>
+            <li class="mt-8 flex items-center">
+              <i class="fas fa-check-circle"></i>
+              <span class="ml-2">Feature 3</span>
+            </li>
+            <li class="mt-8 flex items-center">
+                <i class="fas fa-check-circle"></i>
+                <span class="ml-2">Feature 4</span>
+              </li>
+          </ul>
+          <a href="#" class="flex justify-center mt-8 mb-4 p-6 btn mx-auto text-xl font-bold">
+            Subscribe
+          </a>
+        </div>
+      </div>
+
+       Pricing Option 2 (Most Popular) 
+      <div class="w-full sm:w-1/2 lg:w-1/3 p-2">
+        <div class="p-10 border border-neutral-700 rounded-xl">
+          <p class="text-4xl mb-8">
+            Pro
+            <span class="text-yellow-500 bg-clip-text text-xl mb-4 ml-2">
+              (Most Popular)
+            </span>
+          </p>
+          <p class="mb-8">
+            <span class="text-5xl mt-6 mr-2">$20</span>
+            <span class="text-neutral-400 tracking-tight">/Month</span>
+          </p>
+          <ul>
+            <li class="mt-8 flex items-center">
+              <i class="fas fa-check-circle"></i>
+              <span class="ml-2">Feature 1</span>
+            </li>
+            <li class="mt-8 flex items-center">
+              <i class="fas fa-check-circle"></i>
+              <span class="ml-2">Feature 2</span>
+            </li>
+            <li class="mt-8 flex items-center">
+              <i class="fas fa-check-circle"></i>
+              <span class="ml-2">Feature 3</span>
+            </li>
+            <li class="mt-8 flex items-center">
+              <i class="fas fa-check-circle"></i>
+              <span class="ml-2">Feature 4</span>
+            </li>
+          </ul>
+          <a href="#" class="flex justify-center mt-8 mb-4 p-6 btn mx-auto text-xl font-bold">
+            Subscribe
+          </a>
+        </div>
+      </div>
+
+       Pricing Option 3 
+      <div class="w-full sm:w-1/2 lg:w-1/3 p-2">
+        <div class="p-10 border border-neutral-700 rounded-xl">
+          <p class="text-4xl mb-8">
+            Enterprise
+          </p>
+          <p class="mb-8">
+            <span class="text-5xl mt-6 mr-2">$30</span>
+            <span class="text-neutral-400 tracking-tight">/Month</span>
+          </p>
+          <ul>
+            <li class="mt-8 flex items-center">
+              <i class="fas fa-check-circle"></i>
+              <span class="ml-2">Feature 1</span>
+            </li>
+            <li class="mt-8 flex items-center">
+              <i class="fas fa-check-circle"></i>
+              <span class="ml-2">Feature 2</span>
+            </li>
+            <li class="mt-8 flex items-center">
+              <i class="fas fa-check-circle"></i>
+              <span class="ml-2">Feature 3</span>
+            </li>
+            <li class="mt-8 flex items-center">
+              <i class="fas fa-check-circle"></i>
+              <span class="ml-2">Feature 4</span>
+            </li>
+        
+          </ul>
+          <a href="#" class="flex justify-center mt-8 mb-4 p-6 btn mx-auto text-xl font-bold">
+            Subscribe
+          </a>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  
+{% endblock %}

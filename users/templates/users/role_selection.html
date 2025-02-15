@@ -1,0 +1,147 @@
+{% extends "blog/base/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+    .role-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 2rem;
+        background-color: #f8f9fa;
+    }
+
+    .role-card {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+    }
+
+    .role-heading {
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    .role-form {
+        width: 100%;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        text-align: left;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #4a5568;
+        font-weight: 500;
+    }
+
+    .form-select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        background-color: #f8fafc;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-select:focus {
+        outline: none;
+        border-color: #4299e1;
+        background-color: white;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        justify-content: center;
+    }
+
+   /* Submit Button */
+.btn-submit {
+  appearance: none;
+  background-color: transparent;
+  border: 0.125em solid #1A1A1A;
+  border-radius: 0.9375em;
+  box-sizing: border-box;
+  color: #3B3B3B;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+  margin: 0;
+  min-height: 3.75em;
+  min-width: 0;
+  outline: none;
+  padding: 1em 2.3em;
+  text-align: center;
+  text-decoration: none;
+  transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  will-change: transform;
+}
+
+.btn-submit:hover {
+  color: #fff;
+  background-color: #1A1A1A;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+  transform: translateY(-2px);
+}
+
+.btn-submit:active {
+  box-shadow: none;
+  transform: translateY(0);
+}
+.button-group a{
+    text-decoration: none;
+}
+
+    @media (max-width: 480px) {
+        .role-card {
+            padding: 1.5rem;
+        }
+        
+        .role-heading {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+<div class="role-container">
+    <div class="role-card">
+        <h2 class="role-heading">Select Your Role</h2>
+        <form method="POST" class="role-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="role" class="form-label">Choose your role:</label>
+                <select name="role" id="role" class="form-select">
+                    <option value="Startup">Startup</option>
+                    <option value="Project_holder">Project Holder</option>
+                    <option value="Incubator">Incubator</option>
+                    <option value="Investor">Investor</option>
+                    <option value="Accelerator">Accelerator</option>
+                    <option value="Freelancer">Freelancer</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button type="submit" class="btn-submit ">Submit</button>
+                <a href="{% url 'blog-home' %}" class="btn-submit ">Skip</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

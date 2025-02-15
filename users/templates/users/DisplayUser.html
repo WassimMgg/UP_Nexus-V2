@@ -1,0 +1,314 @@
+{% extends 'blog/base/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container light-style flex-grow-1 container-p-y my-4">
+    <h4 class="font-weight-bold py-3 mb-4">User Profile</h4>
+    <div class="card overflow-hidden">
+      <div class="row no-gutters row-bordered row-border-light">
+        <!-- Sidebar (for overview navigation if needed) -->
+        <div class="col-md-3 pt-0">
+          <div class="list-group list-group-flush account-settings-links">
+            <a href="#profile-overview" class="list-group-item list-group-item-action active">
+              Overview
+            </a>
+            <a href="#account-settings" class="list-group-item list-group-item-action">
+              Account Settings
+            </a>
+          </div>
+        </div>
+        <!-- Profile Overview Display -->
+        <div class="col-md-9">
+          <div id="profile-overview" class="card-body">
+            <!-- Profile Header -->
+            <div class="media align-items-center">
+              <img
+                src="{{ user.profile.image.url|default:'https://bootdey.com/img/Content/avatar/avatar1.png' }}"
+                alt="User Avatar"
+                class="d-block ui-w-80 rounded-circle"
+              />
+              <div class="media-body ml-4">
+                <h4 class="font-weight-bold mb-0">{{ user.get_full_name|default:user.username }}</h4>
+                <div class="text-black small">@{{ user.username }}</div>
+                <div class="text-black small mt-1">{{ user.profile.role|default:"User" }}</div>
+              </div>
+            </div>
+            <hr class="border-light m-0" />
+            <!-- Social Media Links -->
+            <div class="flex justify-start md:w-[75%] my-6">
+              {% if user.profile.facebook %}
+              <a href="{{ user.profile.facebook }}" class="text-black hover:text-yellow-500 mr-2">
+                <i class="fab fa-facebook-square text-3xl"></i>
+              </a>
+              {% endif %}
+              {% if user.profile.linkedin %}
+              <a href="{{ user.profile.linkedin }}" class="text-black hover:text-yellow-500 mx-2">
+                <i class="fab fa-linkedin text-3xl"></i>
+              </a>
+              {% endif %}
+              {% if user.profile.instagram %}
+              <a href="{{ user.profile.instagram }}" class="text-black hover:text-yellow-500 mx-2">
+                <i class="fab fa-instagram text-3xl"></i>
+              </a>
+              {% endif %}
+              {% if user.profile.github %}
+              <a href="{{ user.profile.github }}" class="text-black hover:text-yellow-500 mx-2">
+                <i class="fa-brands fa-square-github text-3xl"></i>
+              </a>
+              {% endif %}
+              {% if user.profile.website %}
+              <a href="{{ user.profile.website }}" class="text-black hover:text-yellow-500 mx-2">
+                <span class="material-symbols-outlined text-3xl">language</span>
+              </a>
+              {% endif %}
+            </div>
+
+            <!-- General Information -->
+            <div class="form-group">
+              <h2>Bio</h2>
+              <p class="form-control-static">
+                {{ user.profile.bio|default:"No bio added yet." }}
+              </p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Birthday</label>
+              <p class="form-control-static">{{ user.profile.birthday|date:"F j, Y" }}</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Country</label>
+              <p class="form-control-static">{{ user.profile.country|default:"Not specified" }}</p>
+            </div>
+
+            <hr class="border-light m-0" />
+
+            <!-- Contact Information -->
+            <h6 class="mb-4">Contact Information</h6>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <p class="form-control-static">{{ user.email }}</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <p class="form-control-static">{{ user.profile.phone_number|default:"Not provided" }}</p>
+            </div>
+            <hr class="border-light m-0" />
+          </div>
+
+          <!-- Account Settings Panel -->
+          <div id="account-settings" class="card-body" style="display: none;">
+            <h4 class="profile-header">Account Settings</h4>
+            <div class="profile-card d-flex">
+              <!-- Sidebar Menu for Account Settings -->
+              <div class="profile-sidebar mr-4">
+                <ul class="profile-menu list-unstyled">
+                  <li>
+                    <a href="#account-general" class="profile-menu-item active">General</a>
+                  </li>
+                  <li>
+                    <a href="#account-social-media" class="profile-menu-item">Add Social links</a>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Profile Forms Section -->
+              <div class="profile-content flex-grow-1">
+                <!-- General Settings Form -->
+                <div id="account-general" class="profile-section">
+                  <div class="profile-form">
+                    <div class="profile-image-container mb-3">
+                      <img src="{{ user.profile.image.url|default:'https://bootdey.com/img/Content/avatar/avatar1.png' }}" class="profile-image rounded-circle" alt="Profile Picture" width="100">
+                      <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label class="d-block mt-2">
+                          Upload new photo:
+                          <input type="file" name="image" class="form-control-file">
+                        </label>
+                    </div>
+
+                    <hr>
+
+                    <!-- Profile Update Form -->
+                    <fieldset>
+                      <legend>Profile Info</legend>
+                      <!-- Username -->
+                      <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" class="form-control" value="{{ user.username }}" required>
+                      </div>
+
+                      <!-- Email -->
+                      <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" value="{{ user.email }}" required>
+                      </div>
+
+                      <!-- Phone Number -->
+                      <div class="form-group">
+                        <label for="phone_number">Phone Number</label>
+                        <input type="text" id="phone_number" name="phone_number" class="form-control" value="{{ user.profile.phone_number }}">
+                      </div>
+                      <!-- Website -->
+                      <div class="form-group">
+                        <label for="website">Website</label>
+                        <input type="url" id="website" name="website" class="form-control" value="{{ user.profile.website }}">
+                      </div>
+
+                      <!-- Role Display -->
+                      <div class="form-group">
+                        <label>Your Role</label>
+                        <input type="text" class="form-control" value="{{ user.profile.role }}" disabled>
+                      </div>
+
+                      <!-- Role-Specific Fields -->
+                      {% if user.profile.role %}
+                        {% if user.profile.role == 'startup' %}
+                          <div class="form-group">
+                            <label for="company_name">Company Name</label>
+                            <input type="text" id="company_name" name="company_name" class="form-control" value="{{ user.profile.company_name }}">
+                          </div>
+                          {% if user.profile.business_license %}
+                            <p><strong>Business License:</strong> <a href="{{ user.profile.business_license.url }}">Download</a></p>
+                          {% endif %}
+                        {% elif user.profile.role == 'freelancer' %}
+                          <div class="form-group">
+                            <label for="skills">Skills</label>
+                            <input type="text" id="skills" name="skills" class="form-control" value="{{ user.profile.skills }}">
+                          </div>
+                          <div class="form-group">
+                            <label for="portfolio_link">Portfolio</label>
+                            <input type="url" id="portfolio_link" name="portfolio_link" class="form-control" value="{{ user.profile.portfolio_link }}">
+                          </div>
+                          {% if user.profile.resume %}
+                            <p><strong>Resume:</strong> <a href="{{ user.profile.resume.url }}">Download</a></p>
+                          {% endif %}
+                        {% elif user.profile.role == 'investor' %}
+                          <div class="form-group">
+                            <label for="investment_focus">Investment Focus</label>
+                            <input type="text" id="investment_focus" name="investment_focus" class="form-control" value="{{ user.profile.investment_focus }}">
+                          </div>
+                          <div class="form-group">
+                            <label for="investment_stage">Investment Stage</label>
+                            <input type="text" id="investment_stage" name="investment_stage" class="form-control" value="{{ user.profile.investment_stage }}">
+                          </div>
+                          {% if user.profile.investor_certificate %}
+                            <p><strong>Investor Certificate:</strong> <a href="{{ user.profile.investor_certificate.url }}">Download</a></p>
+                          {% endif %}
+                        {% elif user.profile.role == 'incubator' %}
+                          <div class="form-group">
+                            <label for="incubator_name">Incubator Name</label>
+                            <input type="text" id="incubator_name" name="incubator_name" class="form-control" value="{{ user.profile.incubator_name }}">
+                          </div>
+                          <div class="form-group">
+                            <label for="incubator_description">Description</label>
+                            <textarea id="incubator_description" name="incubator_description" class="form-control">{{ user.profile.incubator_description }}</textarea>
+                          </div>
+                          {% if user.profile.incubator_certificate %}
+                            <p><strong>Certificate:</strong> <a href="{{ user.profile.incubator_certificate.url }}">Download</a></p>
+                          {% endif %}
+                        {% elif user.profile.role == 'accelerator' %}
+                          <div class="form-group">
+                            <label for="accelerator_name">Accelerator Name</label>
+                            <input type="text" id="accelerator_name" name="accelerator_name" class="form-control" value="{{ user.profile.accelerator_name }}">
+                          </div>
+                          <div class="form-group">
+                            <label for="accelerator_description">Description</label>
+                            <textarea id="accelerator_description" name="accelerator_description" class="form-control">{{ user.profile.accelerator_description }}</textarea>
+                          </div>
+                          {% if user.profile.accelerator_certificate %}
+                            <p><strong>Certificate:</strong> <a href="{{ user.profile.accelerator_certificate.url }}">Download</a></p>
+                          {% endif %}
+                        {% elif user.profile.role == 'project_holder' %}
+                          <div class="form-group">
+                            <label for="project_name">Project Name</label>
+                            <input type="text" id="project_name" name="project_name" class="form-control" value="{{ user.profile.project_name }}">
+                          </div>
+                          <div class="form-group">
+                            <label for="project_description">Description</label>
+                            <textarea id="project_description" name="project_description" class="form-control">{{ user.profile.project_description }}</textarea>
+                          </div>
+                          {% if user.profile.project_proposal %}
+                            <p><strong>Project Proposal:</strong> <a href="{{ user.profile.project_proposal.url }}">Download</a></p>
+                          {% endif %}
+                        {% endif %}
+                      {% else %}
+                        <p>You have not selected a role yet. <a href="{% url 'role-selection' %}">Click Here to Select one</a></p>
+                      {% endif %}
+                    </fieldset>
+
+                    <div class="form-actions mt-3">
+                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                      <button type="reset" class="btn btn-secondary">Cancel</button>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+
+                <!-- Social Media Settings Form -->
+                <div id="account-social-media" class="profile-section" style="display: none;">
+                  <div class="profile-form">
+                    <form method="POST">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <label for="linkedIn">LinkedIn</label>
+                        <input type="url" id="linkedIn" name="linkedIn" class="form-control" value="{{ user.profile.linkedin }}">
+                      </div>
+                      <div class="form-group">
+                        <label for="facebook">Facebook</label>
+                        <input type="url" id="facebook" name="facebook" class="form-control" value="{{ user.profile.facebook }}">
+                      </div>
+                      <div class="form-group">
+                        <label for="instagram">Instagram</label>
+                        <input type="url" id="instagram" name="instagram" class="form-control" value="{{ user.profile.instagram }}">
+                      </div>
+                      <button type="submit" class="btn btn-primary">Add Links</button>
+                    </form>
+                  </div>
+                </div>
+              </div><!-- .profile-content -->
+            </div><!-- .profile-card -->
+          </div><!-- #account-settings -->
+        </div><!-- .col-md-9 -->
+      </div><!-- .row -->
+    </div><!-- .card -->
+  </div><!-- .container -->
+
+  <!-- jQuery and Bootstrap Bundle (includes Popper) -->
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Simple Tab Switching Script -->
+  <script>
+    // Switch between overview and account settings in the sidebar
+    document.querySelectorAll('.account-settings-links a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        // Hide all main sections
+        document.querySelectorAll('#profile-overview, #account-settings').forEach(section => {
+          section.style.display = 'none';
+        });
+        // Remove active state from sidebar links
+        document.querySelectorAll('.account-settings-links a').forEach(link => link.classList.remove('active'));
+        // Show the selected section
+        const target = this.getAttribute('href');
+        document.querySelector(target).style.display = 'block';
+        this.classList.add('active');
+      });
+    });
+
+    // Tab switching within the Account Settings panel
+    document.querySelectorAll('.profile-menu-item').forEach(item => {
+      item.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelectorAll('.profile-section').forEach(section => {
+          section.style.display = 'none';
+        });
+        document.querySelector(this.getAttribute('href')).style.display = 'block';
+        // Update active class on profile menu items
+        document.querySelectorAll('.profile-menu-item').forEach(link => link.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+{% endblock %}

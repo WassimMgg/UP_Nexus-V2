@@ -1,0 +1,251 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+.container {
+  margin: auto;
+}
+
+html {
+  background-color: #fbfcfb;
+}
+
+.Nexus {
+  color: #ffd502;
+}
+
+.WorkflowTitle {
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.WorkflowDesc {
+  line-height: 1.6;
+  max-width: 500px;
+}
+
+@media (min-width: 1024px) {
+  .lg-w-half {
+    width: 50%;
+  }
+}
+
+.card {
+  transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+  transform: scale(1.05);
+}
+
+.custum-file-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px;
+  border: 2px dashed black; /* Purple border */
+  border-radius: 8px;
+  background-color: #f9fafb; /* Light gray background */
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.custum-file-upload .icon svg {
+  width: 24px;
+  height: 24px;
+  fill: black; /* Purple fill */
+}
+.custum-file-upload .text span {
+  color: black; /* Purple text */
+  font-weight: bold;
+}
+.custum-file-upload input[type="file"] {
+  display: none; /* Hide the default file input */
+}
+
+.popup {
+  position: fixed;
+  top: -100vh;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  transition: top 0ms ease-in-out 300ms;
+}
+
+.popup.active {
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: top 0ms ease-in-out 0ms;
+}
+
+.popup .overlay {
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+  z-index: 1000;
+}
+
+.popup.active .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 1;
+  top: -10%;
+  height: 110vh;
+}
+
+.popup .popup-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 95%;
+  max-width: 500px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 20px;
+  opacity: 0;
+  box-shadow: 0px 2px 2px 5px rgba(0, 0, 0, 0.05);
+  transition: all 300ms ease-in-out;
+  z-index: 1001;
+  text-align: left;
+}
+
+.popup.active .popup-content {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.read-more-popup-content {
+  position: absolute;
+  top: 49%;
+  left: 60%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 95%;
+  max-width: 800px;
+  height: 80vh;
+  background: #fff;
+  padding: 25px;
+  border-radius: 20px;
+  opacity: 0;
+  box-shadow: 0px 2px 2px 5px rgba(0, 0, 0, 0.05);
+  transition: all 300ms ease-in-out;
+  z-index: 1001;
+  text-align: left;
+  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable both-edges;
+}
+
+.popup.active .read-more-popup-content {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+/*Styles for user profile panel*/
+.user {
+  position: relative;
+  transition: 0.25s cubic-bezier(.25,.8,.25, 1);
+}
+.user-avatar {
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.user-avatar-edit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: rgba(0,0,0,.54) !important;
+  opacity: 0;
+  transition: opacity 0.25s cubic-bezier(.25,.8,.25, 1);
+  md-icon {
+    color: rgba(255,255,255,.87);
+  }
+}
+.user-avatar:hover {
+  transition: 0.25s cubic-bezier(.25,.8,.25, 1);
+}
+.user-avatar-edit:hover,
+.user-avatar:hover + .user-avatar-edit {
+  opacity: 1;
+}
+.user-name {
+  font-size: 24px;
+}
+.user-title {
+  color: rgba(0,0,0,.38);
+  font-weight: 500;
+  margin-top: 0;
+}
+.user-input-container {
+  box-sizing: border-box;
+  width: 100%;
+}
+.user-name,
+.user-title {
+  background-image: none !important;
+  &.md-input[disabled] {
+    color: rgba(0,0,0,.87);
+  }
+}
+@media (max-width: 599px) {
+  .user {
+    padding-right: 0;
+    margin-bottom: 16px;
+  }
+  .user-avatar {
+    width: 120px;
+    height: 120px;
+    margin-right: 16px;
+  }
+  .user-avatar-edit {
+    top: 36px;
+    left: 30px;
+  }
+  .md-toolbar-tools > md-menu {
+    padding: 0;
+  }
+}
+@media (max-width: 959px) and (min-width: 600px) {
+  .user {
+    padding-right: 24px;
+  }
+  .user-avatar {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 16px;
+  }
+  .user-avatar-edit {
+    top: 76px;
+    left: 70px;
+  }
+  .user-input-container {
+    padding-left: 8px;
+    width: 200px;
+  }
+}
+@media (min-width: 960px) {
+  .user {
+    padding-right: 24px;
+  }
+  .user-avatar {
+    width: 260px;
+    height: 260px;
+  }
+  .user-avatar-edit {
+    top: 106px;
+    left: 100px;
+  }
+  .user-input-container {
+    width: 250px;
+    text-overflow: ellipsis;
+    padding-left: 24px;
+  }
+}
