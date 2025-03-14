@@ -1,0 +1,72 @@
+{% extends 'blog/base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    a{
+        text-decoration: none !important;
+    }
+
+    a:hover{
+        color: #ffd502;
+    }
+</style>
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Search Profiles</h1>
+    
+    <!-- Search Form -->
+    <form method="GET" action="{% url 'search' %}" class="mb-8">
+        <div class="flex gap-4 mb-4">
+            <input type="text" 
+                   name="search" 
+                   placeholder="Search by username..." 
+                   value="{{ search_term }}"
+                   class="flex-1 p-2 border rounded">
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">
+                Search
+            </button>
+        </div>
+        
+        <!-- Role Filters -->
+        <div class="mb-4">
+            <h3 class="font-medium mb-2">Filter by Role:</h3>
+            <div class="flex flex-wrap gap-4">
+                {% for value, label in role_choices %}
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" 
+                           name="roles" 
+                           value="{{ value }}"
+                           {% if value in selected_roles %}checked{% endif %}
+                           class="form-checkbox">
+                    <span>{{ label }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+    </form>
+
+    <!-- Results -->
+    {% if profiles %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for profile in profiles %}
+        <div class="border p-4 rounded-lg shadow-sm">
+            <a href="{% url 'public-profile' profile.user.username %}">
+             <img src="{{ profile.image.url }}" 
+                 alt="{{ profile.user.username }}"
+                 class="w-24 h-24 rounded-full mx-auto mb-4">
+             <h2 class="text-xl font-semibold text-center">
+                {{ profile.user.username }}
+             </h2>
+            </a>
+            <p class="text-center text-gray-600">
+                {{ profile.get_role_display }}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-gray-500">No profiles found matching your criteria.</p>
+    {% endif %}
+</div>
+{% endblock %}

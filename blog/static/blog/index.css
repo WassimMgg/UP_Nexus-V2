@@ -434,8 +434,21 @@ html {
 
  .profile-card{
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
+ }
+
+ .profile-card-name{
+  font-size: large;
+  margin-top: 13px;
+ }
+
+ .profile-card-name a{
+  text-decoration: none !important;
+ } 
+
+ .profile-card-name a:hover{
+  color: #ffd502 !important;
  }
 
 .card-body p {
@@ -886,3 +899,89 @@ textarea {
   color: #ffd502;
 }
 
+/*Search Function */
+
+.box {
+  height: 30px;
+  display: flex;
+  cursor: pointer;
+  padding: 10px 20px;
+  background: #fff;
+  border-radius: 30px;
+  align-items: center;
+  width: 60px;
+  overflow: hidden;
+  transition: all 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  position: relative;
+}
+
+.box:hover,
+.box:focus-within {
+  width: 320px;
+  padding: 20px;
+  border: #000 1px solid;
+  border-radius: 30px;
+}
+
+.box input {
+  width: 0;
+  border: none;
+  outline: none;
+  font-weight: 500;
+  background: transparent;
+  transition: all 0.6s 0.1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  opacity: 0;
+  margin-left: 15px;
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+.box:hover input,
+.box:focus-within input {
+  width: 100%;
+  opacity: 1;
+  cursor: text;
+}
+
+.box .fas {
+  color: #ffd502;
+  font-size: 20px;
+  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  min-width: 20px;
+  transform-origin: left;
+}
+
+.box:hover .fas,
+.box:focus-within .fas {
+  transform: scale(1.1) translateX(5px);
+  text-shadow: 0 2px 5px rgba(255, 213, 2, 0.3);
+}
+
+/* Placeholder animation */
+.box input::placeholder {
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.box:hover input::placeholder,
+.box:focus-within input::placeholder {
+  opacity: 0.7;
+}
+
+/* Micro-interaction for click */
+.box:active {
+  transform: scale(0.98);
+}
+
+/* Browser prefixes */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  .box {
+    -webkit-transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  }
+  .box input {
+    -webkit-transition: all 0.6s 0.1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  }
+  .box .fas {
+    -webkit-transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  }
+}

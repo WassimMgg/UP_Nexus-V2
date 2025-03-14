@@ -5,7 +5,8 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .models import Post
+from .models import Post 
+from users.models import Profile
 from .forms import PostForm  # Assuming you have a form for creating/updating posts
 
 def home(request):
@@ -33,18 +34,18 @@ def post_create(request):
 
 @login_required
 def post_update(request, pk):
-    # Retrieve the post instance or return a 404 if not found
+    
     post = get_object_or_404(Post, pk=pk)
     
     if request.method == "POST":
-        # Bind data (and files) to the form with the existing post instance
+      
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
-            # Redirect to the post detail page (adjust URL name/arguments as needed)
+           
             return redirect('post-detail', pk=post.pk)
     else:
-        # For a GET request, create a form pre-populated with the post instance
+      
         form = PostForm(instance=post)
     
     context = {
@@ -69,3 +70,23 @@ def post_delete(request, pk):
 def announcement(request):
     announce = Post.objects.all()
     return render(request, 'blog/announcement.html', {'title': 'Announcement', 'posts': announce})
+
+def search(request):
+    search_term = request.GET.get('search', '')
+    selected_roles = request.GET.getlist('roles')  # Get list of selected roles
+
+    profiles = Profile.objects.all()
+
+    if search_term:
+        profiles = profiles.filter(user__username__icontains=search_term)
+    
+    if selected_roles:
+        profiles = profiles.filter(role__in=selected_roles)
+
+    context = {
+        'profiles': profiles,
+        'search_term': search_term,
+        'selected_roles': selected_roles,
+        'role_choices': Profile.ROLE_CHOICES
+    }
+    return render(request, 'blog/search.html', context)

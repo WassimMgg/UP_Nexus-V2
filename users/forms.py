@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Profile
 
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField()
+    # email = forms.EmailField()
     phone_number = forms.CharField(max_length=15)
 
     class Meta:
@@ -12,18 +12,15 @@ class UserRegisterForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2', 'phone_number' ]
 
     def save(self, commit=True):
-        # Save the User instance
         user = super().save(commit=False)
-        user.email = self.cleaned_data['email']
+    # Create profile without 'commit' argument
+        profile = Profile(user=user, phone_number=self.cleaned_data['phone_number'])
+    
         if commit:
-            user.save()
-
-            # Create or update the Profile instance
-            profile, created = Profile.objects.get_or_create(user=user)
-            profile.phone_number = self.cleaned_data['phone_number']
-            profile.save()
-
-        return user
+            user.save()  
+            profile.save() 
+        
+        return user  # Typically return the user object
     
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()

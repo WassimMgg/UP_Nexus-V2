@@ -3,41 +3,33 @@
 
 {% block css_site %}
 <style>
-    /* Custom CSS for the profile page */
-    .container {
-        width: 90%;
-        max-width: 1200px;
-        margin: 0 auto;
+    :root {
+        --primary-color: #ffd502;
+        --secondary-color: #2c3e50;
+        --background-color: #f8f9fa;
     }
 
-    .profile-header {
-        font-weight: bold;
-        font-size: 1.5rem;
-        padding: 1rem 0;
-        margin-bottom: 1.5rem;
+    .profile-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
     }
 
     .profile-card {
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 4px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         overflow: hidden;
         display: flex;
-        flex-wrap: wrap;
-        align-items: start;
+        min-height: 700px;
     }
 
     .profile-sidebar {
-        flex: 0 0 25%;
-        max-width: 25%;
-        background: #fff;
-        padding: 1rem;
-    }
-
-    .profile-content {
-        flex: 0 0 75%;
-        max-width: 75%;
-        padding: 1rem;
+        width: 280px;
+        background: var(--secondary-color);
+        padding: 2rem 1rem;
+        color: white;
+        min-height: 700px;
     }
 
     .profile-menu {
@@ -46,286 +38,361 @@
         margin: 0;
     }
 
-    .profile-menu a{
-        text-decoration: none;
-    }
-
     .profile-menu-item {
         display: block;
-        padding: 0.75rem 1.25rem;
-        margin-bottom: 0.5rem;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        text-decoration: none;
-        color: #333;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none !important;
+        transition: all 0.3s ease;
+    }
+
+    .profile-menu-item:hover {
+        color:white;
     }
 
     .profile-menu-item.active {
-        background: #ffd502;
-        color: #fff;
-        border-color: #ffd502;
+        background: var(--primary-color);
+        color: var(--secondary-color);
     }
 
-    .profile-form {
-        margin-top: 1rem;
-    }
-
-    .profile-form label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: bold;
-    }
-
-    .profile-form input[type="text"],
-    .profile-form input[type="email"],
-    .profile-form input[type="password"],
-    .profile-form input[type="file"],
-    .profile-form input[type="url"] {
-        width: 100%;
-        padding: 0.5rem;
-        margin-bottom: 1rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-    }
-
-    .profile-form input[disabled] {
-        background: #f8f9fa;
-        cursor: not-allowed;
-    }
-
-    .profile-form button {
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .profile-form button[type="submit"] {
-        background: #ffd502;
-        color: #fff;
-    }
-
-    .profile-form button[type="reset"] {
-        background: #6c757d;
-        color: #fff;
-        margin-left: 0.5rem;
-    }
-
-    .profile-image {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        margin-right: 1.5rem;
+    .profile-content {
+        flex: 1;
+        padding: 2rem;
+        background: var(--background-color);
+        min-height: 700px;
     }
 
     .profile-section {
-        margin-bottom: 1.5rem;
+        display: none;
     }
 
-    .profile-section h2 {
-        font-size: 1.25rem;
-        margin-bottom: 1rem;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 0.5rem;
+    .profile-section.active {
+        display: block;
     }
 
-    .profile-section hr {
-        border: 0;
-        border-top: 1px solid #ddd;
+    .avatar-upload {
+        position: relative;
+        width: 150px;
         margin: 1rem 0;
     }
 
-    .profile-form p {
-        margin-bottom: 1rem;
+    .avatar-preview {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--primary-color);
     }
 
-    .profile-form p a{
-       text-decoration: none;
-       color: #ffd502;
+    .avatar-upload label {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: white;
+        padding: 0.5rem;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--secondary-color);
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(255, 213, 2, 0.2);
+    }
+
+    .btn-primary {
+        background: var(--primary-color);
+        color: var(--secondary-color);
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+    }
+
+    .document-link {
+        display: inline-flex;
+        align-items: center;
+        color: var(--secondary-color);
+        text-decoration: none;
+        padding: 0.5rem;
+        border-radius: 6px;
+        transition: background 0.3s ease;
+    }
+
+    .document-link:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    @media (max-width: 768px) {
+        .profile-card {
+            flex-direction: column;
+        }
+        
+        .profile-sidebar {
+            width: 100%;
+            padding: 1rem;
+        }
+    }
+    .avatar-container {
+        width: 8rem;
+        height: 8rem;
+    }
+
+    .avatar-preview {
+        transition: filter 0.3s ease;
+    }
+
+    #avatarMessages {
+        min-height: 1.5rem;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h4 class="profile-header">Account Settings</h4>
-
+<div class="profile-container">
     <div class="profile-card">
         <!-- Sidebar Menu -->
         <div class="profile-sidebar">
+            <div class="avatar-upload">
+                <div class="avatar-container relative group">
+                    <!-- Avatar Preview with Loading State -->
+                    <img src="{{ user.profile.image.url|default:'/static/default-avatar.jpg' }}" 
+                         class="avatar-preview w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg transition-all duration-300 group-hover:brightness-75" 
+                         alt="Profile Picture" 
+                         id="avatarPreview">
+                    
+                    <!-- Upload Overlay -->
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <form method="POST" enctype="multipart/form-data" id="avatarForm" class="text-center">
+                            {% csrf_token %}
+                            <label class="cursor-pointer p-2 bg-white/90 rounded-full shadow-md hover:bg-white transition-colors duration-200">
+                                <input type="file" 
+                                       name="image" 
+                                       id="avatarInput" 
+                                       class="hidden" 
+                                       accept="image/*"
+                                       aria-label="Upload profile picture">
+                                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                          d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                          d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                            </label>
+                        </form>
+                    </div>
+            
+                    <!-- Loading Spinner -->
+                    <div id="avatarLoading" 
+                         class="absolute inset-0 hidden items-center justify-center bg-black/50 rounded-full">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                    </div>
+                </div>
+            
+                <!-- Error/Success Messages -->
+                <div id="avatarMessages" class="mt-2 text-sm text-center"></div>
+            </div>
+            
             <ul class="profile-menu">
-                <li><a href="#account-general" class="profile-menu-item active">General</a></li>
-                <li><a href="#account-social-media" class="profile-menu-item active">Add Social links</a></li>
+                <li><a href="#general" class="profile-menu-item active">General Settings</a></li>
+                <li><a href="#social" class="profile-menu-item">Social Links</a></li>
+                <li><a href="#security" class="profile-menu-item">Security</a></li>
             </ul>
         </div>
 
-        <!-- Profile Forms Section -->
+        <!-- Main Content -->
         <div class="profile-content">
             <!-- General Settings -->
-            <div id="account-general" class="profile-section">
-                <div class="profile-form">
-                    <div class="profile-image-container">
-                        <img src="{{ user.profile.image.url }}" class="profile-image" alt="Profile Picture">
-                        <form method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <label>
-                                Upload new photo:
-                                <input type="file" name="image">
-                            </label>
+            <div id="general" class="profile-section active">
+                <h2>Profile Settings</h2>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="username" value="{{ user.username }}" class="form-input" required>
                     </div>
 
-                    <hr>
-
-                    <!-- Profile Update Form -->
-                    <fieldset>
-                        <legend>Profile Info</legend>
-
-                        <!-- Username -->
-                        <div>
-                            <label for="username">Username</label>
-                            <input type="text" id="username" name="username" value="{{ user.username }}" required>
-                        </div>
-
-                        <!-- Email -->
-                        <div>
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" value="{{ user.email }}" required>
-                        </div>
-
-                        <!-- Phone Number -->
-                        <div>
-                            <label for="phone_number">Phone Number</label>
-                            <input type="text" id="phone_number" name="phone_number" value="{{ user.profile.phone_number }}">
-                        </div>
-                        <div>
-                          <label for="website">Website</label>
-                          <input type="url" id="website" name="website" value="{{ user.profile.website }}">
-                      </div>
-
-                        <!-- Role Display -->
-                        <div>
-                            <label>Your Role</label>
-                            <input type="text" value="{{ user.profile.role }}" disabled>
-                        </div>
-
-                        <!-- Conditionally Render Role-Specific Fields -->
-                        {% if user.profile.role %}
-
-
-   {% if user.profile.role == 'Startup' %}
-    <label for="company_name">Company Name:</label>
-    <input type="text" id="company_name" name="company_name" value="{{ user.profile.company_name }}">
-
-    {% if user.profile.business_license %}
-        <p><strong>Business License:</strong> <a href="{{ user.profile.business_license.url }}">Download</a></p>
-    {% endif %}
-
-{% elif user.profile.role == 'Freelancer' %}
-    <label for="skills">Skills:</label>
-    <input type="text" id="skills" name="skills" value="{{ user.profile.skills }}">
-
-    <label for="portfolio_link">Portfolio:</label>
-    <input type="url" id="portfolio_link" name="portfolio_link" value="{{ user.profile.portfolio_link }}">
-
-    {% if user.profile.resume %}
-        <p><strong>Resume:</strong> <a href="{{ user.profile.resume.url }}">Download</a></p>
-    {% endif %}
-
-{% elif user.profile.role == 'Investor' %}
-    <label for="investment_focus">Investment Focus:</label>
-    <input type="text" id="investment_focus" name="investment_focus" value="{{ user.profile.investment_focus }}">
-
-    <label for="investment_stage">Investment Stage:</label>
-    <input type="text" id="investment_stage" name="investment_stage" value="{{ user.profile.investment_stage }}">
-
-    {% if user.profile.investor_certificate %}
-        <p><strong>Investor Certificate:</strong> <a href="{{ user.profile.investor_certificate.url }}">Download</a></p>
-    {% endif %}
-
-{% elif user.profile.role == 'Incubator' %}
-    <label for="incubator_name">Incubator Name:</label>
-    <input type="text" id="incubator_name" name="incubator_name" value="{{ user.profile.incubator_name }}">
-
-    <label for="incubator_description">Description:</label>
-    <textarea id="incubator_description" name="incubator_description">{{ user.profile.incubator_description }}</textarea>
-
-    {% if user.profile.incubator_certificate %}
-        <p><strong>Certificate:</strong> <a href="{{ user.profile.incubator_certificate.url }}">Download</a></p>
-    {% endif %}
-
-{% elif user.profile.role == 'Accelerator' %}
-    <label for="accelerator_name">Accelerator Name:</label>
-    <input type="text" id="accelerator_name" name="accelerator_name" value="{{ user.profile.accelerator_name }}">
-
-    <label for="accelerator_description">Description:</label>
-    <textarea id="accelerator_description" name="accelerator_description">{{ user.profile.accelerator_description }}</textarea>
-
-    {% if user.profile.accelerator_certificate %}
-        <p><strong>Certificate:</strong> <a href="{{ user.profile.accelerator_certificate.url }}">Download</a></p>
-    {% endif %}
-
-{% elif user.profile.role == 'Project_holder' %}
-    <label for="project_name">Project Name:</label>
-    <input type="text" id="project_name" name="project_name" value="{{ user.profile.project_name }}">
-
-    <label for="project_description">Description:</label>
-    <textarea id="project_description" name="project_description">{{ user.profile.project_description }}</textarea>
-
-    {% if user.profile.project_proposal %}
-        <p><strong>Project Proposal:</strong> <a href="{{ user.profile.project_proposal.url }}">Download</a></p>
-    {% endif %}
-{% endif %}
-
-{% else %}
-    <p>You have not selected a role yet. <a href="{% url 'role-selection' %}">Click Here to Select one</a></p>
-{% endif %}
-
-
-                    </fieldset>
-
-                    <div class="form-actions">
-                        <button type="submit">Save Changes</button>
-                        <button type="reset">Cancel</button>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" value="{{ user.email }}" class="form-input" required>
                     </div>
-                    </form>
-                </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" name="phone_number" value="{{ user.profile.phone_number }}" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Website</label>
+                        <input type="url" name="website" value="{{ user.profile.website }}" class="form-input">
+                    </div>
+
+                    <!-- Role-Specific Fields -->
+                    {% if user.profile.role %}
+                        <div class="role-section">
+                            <h3>{{ user.profile.get_role_display }} Details</h3>
+                            {% include 'profiles/role_fields/'|add:user.profile.role|add:'.html' %}
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </form>
             </div>
 
+            <!-- Social Media Settings -->
+            <div id="social" class="profile-section">
+                <h2>Social Links</h2>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="form-label">LinkedIn</label>
+                        <input type="url" name="linkedin_link" value="{{ user.profile.linkedin_link }}" class="form-input">
+                    </div>
 
-            <div id="account-social-media" class="profile-section" style="display: none;">
-                <div class="profile-form">
-                    <form method="POST">
-                        {% csrf_token %}
-                        <div>
-                            <label>LinkedIn</label>
-                            <input type="url" name="linkedIn" >
-                        </div>
-                        <div>
-                          <label>Facebook</label>
-                          <input type="url" name="linkedIn" >
-                        </div>
-                        <div>
-                          <label>Instagram</label>
-                          <input type="url" name="Instagram" >
-                        </div>
-                        <button type="submit">Add Links</button>
-                    </form>
-                </div>
+                    <div class="form-group">
+                        <label class="form-label">Facebook</label>
+                        <input type="url" name="facebook_link" value="{{ user.profile.facebook_link }}" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Instagram</label>
+                        <input type="url" name="instagram_link" value="{{ user.profile.instagram_link }}" class="form-input">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Update Social Links</button>
+                </form>
+            </div>
+
+            <!-- Security Settings -->
+            <div id="security" class="profile-section">
+                <h2>Security Settings</h2>
+                <form method="POST" action="{% url 'password_change' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" name="old_password" class="form-input" required>
+                    </div>
+            
+                    <div class="form-group">
+                        <label class="form-label">New Password</label>
+                        <input type="password" name="new_password1" class="form-input" required>
+                    </div>
+            
+                    <div class="form-group">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" name="new_password2" class="form-input" required>
+                    </div>
+            
+                    <button type="submit" class="btn-primary">Change Password</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Tab switching functionality
+    // Tab Switching
     document.querySelectorAll('.profile-menu-item').forEach(item => {
-        item.addEventListener('click', function (e) {
+        item.addEventListener('click', function(e) {
             e.preventDefault();
-            document.querySelectorAll('.profile-section').forEach(section => {
-                section.style.display = 'none';
-            });
-            document.querySelector(this.getAttribute('href')).style.display = 'block';
+            const targetId = this.getAttribute('href').substring(1);
+            
+            // Remove active classes
+            document.querySelectorAll('.profile-menu-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.profile-section').forEach(s => s.classList.remove('active'));
+            
+            // Add active classes
+            this.classList.add('active');
+            document.getElementById(targetId).classList.add('active');
+        });
+    });
+
+    // Avatar Preview
+    document.getElementById('avatarInput').addEventListener('change', function(e) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            document.getElementById('avatarPreview').src = reader.result;
+        }
+        reader.readAsDataURL(this.files[0]);
+        document.getElementById('avatarForm').submit();
+    });
+    document.getElementById('avatarInput').addEventListener('change', function(e) {
+        const form = document.getElementById('avatarForm');
+        const preview = document.getElementById('avatarPreview');
+        const loading = document.getElementById('avatarLoading');
+        const messages = document.getElementById('avatarMessages');
+
+        // Show loading spinner
+        loading.classList.remove('hidden');
+        messages.textContent = '';
+
+        // Preview image before upload
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        // Submit form
+        const formData = new FormData(form);
+        
+        fetch("{% url 'avatar_upload' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                messages.textContent = 'Avatar updated successfully!';
+                messages.classList.remove('text-red-500');
+                messages.classList.add('text-green-500');
+            } else {
+                throw new Error(data.error || 'Failed to update avatar');
+            }
+        })
+        .catch(error => {
+            messages.textContent = error.message;
+            messages.classList.remove('text-green-500');
+            messages.classList.add('text-red-500');
+        })
+        .finally(() => {
+            loading.classList.add('hidden');
+            setTimeout(() => {
+                messages.textContent = '';
+            }, 3000);
         });
     });
 </script>

@@ -19,7 +19,11 @@ class Profile(models.Model):
     pending_role = models.CharField(max_length=20, choices=ROLE_CHOICES, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
-
+    website = models.URLField(blank=True, null=True)
+    facebook_link = models.URLField(blank=True, null=True)
+    instagram_link = models.URLField(blank=True, null=True)
+    linkedin_link = models.URLField(blank=True, null=True)
+    services = models.CharField(max_length=100, blank=True, null=True)
     # Role-specific fields
     # Startup
     company_name = models.CharField(max_length=100, blank=True, null=True)

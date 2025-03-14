@@ -19,6 +19,7 @@ from django.http import HttpResponseRedirect
 from .models import  RoleRequest, Profile
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
+from django.http import JsonResponse
 
 def login_view(request):
     if request.method == 'POST':
@@ -54,6 +55,7 @@ def register(request):
     
     # Pass the form to the template for rendering
     return render(request, 'users/Login_Page.html', {'form': form})
+
 def role_selection(request):
     if request.method == 'POST':
         selected_role = request.POST.get('role')
@@ -137,6 +139,13 @@ def profile(request):
         'p_form': p_form,
     })
 
+def public_profile(request, username):
+    profile_user = get_object_or_404(User, username=username)
+    context = {
+        'profile_user': profile_user,
+        'is_owner': request.user == profile_user
+    }
+    return render(request, 'users/public_profile.html', context)
 
 @staff_member_required
 def approve_role(request, role_request_id):
@@ -184,3 +193,15 @@ def admin_role_requests(request):
     role_requests = RoleRequest.objects.all()
     return render(request, 'admin/role_requests.html', {'role_requests': role_requests})
 
+def avatar_upload(request):
+    if request.method == 'POST' and request.FILES.get('image'):
+        profile = request.user.profile
+        profile.image = request.FILES['image']
+        profile.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+def ecosystem(request):
+    profiles = Profile.objects.all()
+    context = {'profiles': profiles}
+    return render(request, 'users/ecosystem.html', context)

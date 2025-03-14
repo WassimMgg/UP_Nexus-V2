@@ -15,9 +15,14 @@
         </div>
         <div class="card-user">
           <div class="profile-card">
+            <a href="{% url 'public-profile' username=user.username %}">
             <img src="{{ post.author.profile.image.url }}" alt="user" />
-            <h5>{{ post.author }}</h5>
+          </a>
+          <div class="profile-card-name">
+            <a href="{% url 'public-profile' username=user.username %}">{{ post.author }}</a>
           </div>
+          </div>
+         
          
           <div>
             <a href="{% url 'post-detail' post.id %}"  class="btn" >Read More</a>
