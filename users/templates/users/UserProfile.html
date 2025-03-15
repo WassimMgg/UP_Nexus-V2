@@ -254,13 +254,8 @@
                         <input type="url" name="website" value="{{ user.profile.website }}" class="form-input">
                     </div>
 
-                    <!-- Role-Specific Fields -->
-                    {% if user.profile.role %}
-                        <div class="role-section">
-                            <h3>{{ user.profile.get_role_display }} Details</h3>
-                            {% include 'profiles/role_fields/'|add:user.profile.role|add:'.html' %}
-                        </div>
-                    {% endif %}
+      
+                  
 
                     <button type="submit" class="btn-primary">Save Changes</button>
                 </form>

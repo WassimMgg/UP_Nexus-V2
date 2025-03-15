@@ -8,7 +8,11 @@
         text-decoration: none !important;
     }
 
-    a:hover{
+    .btn{
+        color: white;
+    }
+
+    a:hover , .btn:hover {
         color: #ffd502;
     }
 </style>
@@ -23,7 +27,7 @@
                    placeholder="Search by username..." 
                    value="{{ search_term }}"
                    class="flex-1 p-2 border rounded">
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">
+            <button type="submit" class="btn px-4 py-2 bg-[#ffd502]   rounded-xl">
                 Search
             </button>
         </div>

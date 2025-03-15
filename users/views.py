@@ -16,10 +16,11 @@ from .forms import (
     ProjectHolderVerificationForm
 )
 from django.http import HttpResponseRedirect
-from .models import  RoleRequest, Profile
+from .models import  RoleRequest, Profile 
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
 from django.http import JsonResponse
+from blog.models import Post    
 
 def login_view(request):
     if request.method == 'POST':
@@ -30,12 +31,12 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'You have been logged in successfully!')
-            return redirect('blog-home')  # Redirect to the home page or another page
+           
+            return redirect('blog-home') 
         else:
             messages.error(request, 'Invalid username or password. Please try again.')
             return render(request, 'users/Login_Page.html', {'login_errors': True})
-    else:
-        return render(request, 'users/Login_Page.html')
+    return render(request, 'users/Login_Page.html')
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -140,13 +141,16 @@ def profile(request):
     })
 
 def public_profile(request, username):
-    profile_user = get_object_or_404(User, username=username)
+    user = get_object_or_404(User, username=username)
+    profile = get_object_or_404(Profile, user=user)
+    user_posts = Post.objects.filter(author=user).order_by('-date_posted')
+    
     context = {
-        'profile_user': profile_user,
-        'is_owner': request.user == profile_user
+        'profile_user': user,
+        'profile': profile,
+        'user_posts': user_posts,
     }
     return render(request, 'users/public_profile.html', context)
-
 @staff_member_required
 def approve_role(request, role_request_id):
     role_request = get_object_or_404(RoleRequest, id=role_request_id)
@@ -205,3 +209,4 @@ def ecosystem(request):
     profiles = Profile.objects.all()
     context = {'profiles': profiles}
     return render(request, 'users/ecosystem.html', context)
+

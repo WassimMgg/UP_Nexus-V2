@@ -7,7 +7,11 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import Post 
 from users.models import Profile
-from .forms import PostForm  # Assuming you have a form for creating/updating posts
+from .forms import PostForm  
+from users.views import public_profile
+from django.contrib.auth.models import User
+from django.db.models import Q
+
 
 def home(request):
     posts = Post.objects.all().order_by('-date_posted')
@@ -73,13 +77,20 @@ def announcement(request):
 
 def search(request):
     search_term = request.GET.get('search', '')
-    selected_roles = request.GET.getlist('roles')  # Get list of selected roles
+    selected_roles = request.GET.getlist('roles')
 
-    profiles = Profile.objects.all()
-
-    if search_term:
-        profiles = profiles.filter(user__username__icontains=search_term)
+    # Start with base queryset excluding empty/no roles
+    profiles = Profile.objects.exclude(
+        Q(role__exact='') | Q(role__isnull=True)
+    )
     
+    if search_term:
+        profiles = profiles.filter(
+            Q(user__username__icontains=search_term) |
+            Q(user__first_name__icontains=search_term) |
+            Q(user__last_name__icontains=search_term)
+        )
+            
     if selected_roles:
         profiles = profiles.filter(role__in=selected_roles)
 
@@ -90,3 +101,4 @@ def search(request):
         'role_choices': Profile.ROLE_CHOICES
     }
     return render(request, 'blog/search.html', context)
+

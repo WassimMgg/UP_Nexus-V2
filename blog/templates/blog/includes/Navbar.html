@@ -1,4 +1,7 @@
 
+
+
+
 <style>
     a{
         text-decoration: none !important;
@@ -52,7 +55,7 @@
             {% if user.is_authenticated %}
             <div class="hidden lg:flex items-center gap-4">
                 <!-- Profile Link -->
-                <a href="{% url 'profile' %}" class="flex items-center px-4 py-2 space-x-2 transition-all duration-300 
+                <a href="{% url 'public-profile' user.username %}" class="flex items-center px-4 py-2 space-x-2 transition-all duration-300 
                     bg-opacity-10 hover:bg-opacity-20 bg-[#ffd502] rounded-lg group">
                     <i class="fas fa-user-circle text-[#ffd502] group-hover:text-[#d4b000]"></i>
                     <span class="text-gray-700 group-hover:text-[#d4b000] font-medium">Profile</span>

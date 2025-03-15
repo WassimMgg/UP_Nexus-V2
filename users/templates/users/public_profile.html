@@ -9,8 +9,12 @@
             <!-- Profile Header -->
             <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-6 sm:p-8">
                 <div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 justify-between">
+                    <div class="absolute top-4 right-4">
+                       
+                    </div>
                     <!-- Avatar Section -->
                     <div class="relative">
+                        
                         <img src="{{ profile_user.profile.image.url }}" 
                              class="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-white shadow-lg" 
                              alt="{{ profile_user.username }}">
@@ -60,6 +64,13 @@
                             <i class="fab fa-instagram"></i>
                         </a>
                         {% endif %}
+                        {% if user == profile_user %}
+                        <a href="{% url 'profile'  %}" 
+                        class="text-gray-500 hover:text-[#ffd502] transition-colors"
+                           aria-label="Account Settings">
+                            <i class="fas fa-cog "></i>
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -95,13 +106,13 @@
                             Startup Details
                         </h3>
                         <div class="space-y-3">
-                            <p><span class="font-medium">Company Name:</span> {{ profile_user.profile.company_name }}</p>
-                            {% if profile_user.profile.business_license %}
+                            <p class="font-bold text-xl"><span class="font-medium ">Company Name:</span> {{ profile_user.profile.company_name }}</p>
+                            <!-- {% if profile_user.profile.business_license %}
                             <a href="{{ profile_user.profile.business_license.url }}" class="inline-flex items-center gap-2 text-[#ffd502] hover:text-[#d4b000]">
                                 <i class="fas fa-file-pdf"></i>
                                 Business License
                             </a>
-                            {% endif %}
+                            {% endif %} -->
                         </div>
                     </div>
                     {% elif profile_user.profile.role == 'Freelancer' %}
@@ -154,7 +165,28 @@
                 </div>
                 {% endif %}
             </div>
+            <div>
+                <h2 class="text-2xl font-bold mb-4 border-b-2 border-[#ffd502] pb-2 pl-4 mt-4">
+                    My Posts ({{ user_posts.count }})
+                </h2>
+                
+                <div class="pl-4 pb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for post in user_posts %}
+                        <div class="post-card ">
+                            <!-- Reuse your blog app's post card template -->
+                            {% include 'blog/includes/PostCard.html' with post=post %}
+                        </div>
+                    {% empty %}
+                        <p class="text-gray-600">No posts created yet</p>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
+        
+        
+            
+       
     </div>
+   
 </div>
 {% endblock %}
