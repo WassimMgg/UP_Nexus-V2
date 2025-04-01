@@ -9,5 +9,7 @@ urlpatterns = [
     path('post/<int:pk>/update/', views.post_update, name='post-update'),
     path('post/<int:pk>/delete/', views.post_delete, name='post-delete'),
     path('announcement/', views.announcement, name='announcement'),
+    path('approve-post/<int:post_request_id>/', views.approve_post, name='approve_post'),
+    path('reject-post/<int:post_request_id>/', views.reject_post, name='reject_post'),
   
 ] 

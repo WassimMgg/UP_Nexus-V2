@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import JSONField
-from PIL import Image
+# from PIL import Image
 
 class Profile(models.Model):
     ROLE_CHOICES = [
@@ -15,10 +15,11 @@ class Profile(models.Model):
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, blank=True, null=True)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES,default="User" ,  blank=True, null=True)
     pending_role = models.CharField(max_length=20, choices=ROLE_CHOICES, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
+    city  = models.CharField(max_length=50, blank=True, null=True)
     website = models.URLField(blank=True, null=True)
     facebook_link = models.URLField(blank=True, null=True)
     instagram_link = models.URLField(blank=True, null=True)
@@ -72,7 +73,7 @@ class RoleRequest(models.Model):
         ('rejected', 'Rejected'),
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=20, choices=Profile.ROLE_CHOICES)
+    role = models.CharField(max_length=20, choices=Profile.ROLE_CHOICES )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     role_specific_data = JSONField(default=dict)  # Store role-specific information (non-file data)
     created_at = models.DateTimeField(auto_now_add=True)

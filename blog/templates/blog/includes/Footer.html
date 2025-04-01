@@ -1,26 +1,22 @@
+{% load static %}
 <footer class="container p-14  grid lg:grid-cols-3 lg:px-4 gap-8 text-black-300 bg-white-800">
     <div>
-      <h1 class="w-full text-3xl font-bold">
-        Up-<span class="text-yellow-500">Nexus</span>
-      </h1>
+      <a href="{% url 'blog-home' %}" class="flex items-center flex-shrink-0">
+        <img class="h-9 w-13 mr-2" src="{% static 'blog/assets/Logo_Up nexus 1.svg' %}" alt="Logo">
+    </a>
       <p class="py-2">
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Id odit
-        ullam iste repellat consequatur libero reiciendis, blanditiis
-        accusantium.
+        Connecting startups, investors, and incubators in a dynamic ecosystem designed to fuel innovation. We empower visionary ideas, forge strategic partnerships, and accelerate growth—turning bold concepts into transformative success. Join us in shaping the future.
       </p>
       <div class="flex justify-between md:w-[75%] my-6">
-        <a href="https://twitter.com/yourtwitter" class="text-black hover:text-yellow-500">
+        <a href="https://www.facebook.com/profile.php?id=61574069511723" class="text-black hover:text-yellow-500">
           <i class="fab fa-facebook-square text-3xl"></i>
         </a>
-        <a href="https://www.linkedin.com/in/yourlinkedin/" class="text-black hover:text-yellow-500">
+        <a href="https://www.linkedin.com/in/up-nexus-79a160355/" class="text-black hover:text-yellow-500">
           <i class="fab fa-linkedin text-3xl"></i>
         </a>
-        <a href="https://github.com/yourgithub" class="text-black hover:text-yellow-500">
+        <a href="https://www.instagram.com/up__nexus/" class="text-black hover:text-yellow-500">
           <i class="fab fa-instagram text-3xl"></i>
         </a>
-        <a href="https://github.com/yourgithub" class="text-black hover:text-yellow-500">
-            <i class="fa-brands fa-square-github text-3xl"></i>
-          </a>
       </div>
     </div>
     <div class="lg:col-span-2 flex justify-between mt-2">
@@ -36,9 +32,9 @@
       <div>
         <h6 class="font-medium text-gray-400">Company</h6>
         <ul>
-          <li class="py-2 text-sm"><a href="#" class="hover:text-yellow-500">About</a></li>
-          <li class="py-2 text-sm"><a href="#" class="hover:text-yellow-500">Ecosystem</a></li>
-          <li class="py-2 text-sm"><a href="#" class="hover:text-yellow-500">Announcement</a></li>
+          <!-- <li class="py-2 text-sm"><a href="#" class="hover:text-yellow-500">About</a></li> -->
+          <li class="py-2 text-sm"><a href="{% url 'ecosystem' %}" class="hover:text-yellow-500">Ecosystem</a></li>
+          <li class="py-2 text-sm"><a href="{% url 'announcement' %}" class="hover:text-yellow-500">Announcement</a></li>
           <li class="py-2 text-sm"><a href="#" class="hover:text-yellow-500">News</a></li>
           <li class="py-2 text-sm"><a href="#" class="hover:text-yellow-500">Community</a></li>
         </ul>

@@ -4,174 +4,154 @@
 {% block css_site %}
 <style>
     :root {
-        --primary-color: #ffd502;
-        --secondary-color: #2c3e50;
-        --background-color: #f8f9fa;
+        --primary-color: #FFD700;
+        --secondary-color: #2A2F35;
+        --accent-color: #4A90E2;
+        --background-color: #F8F9FF;
+        --text-color: #2A2F35;
     }
 
     .profile-container {
-        max-width: 1200px;
-        margin: 2rem auto;
-        padding: 0 1rem;
+        max-width: 1400px;
+        margin: 3rem auto;
+        padding: 0 2rem;
     }
 
     .profile-card {
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
+        border-radius: 20px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
         display: flex;
-        min-height: 700px;
+        min-height: 800px;
+        position: relative;
+        transition: transform 0.3s ease;
     }
 
     .profile-sidebar {
-        width: 280px;
-        background: var(--secondary-color);
-        padding: 2rem 1rem;
+        width: 320px;
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #1A1E23 100%);
+        padding: 2.5rem 1.5rem;
         color: white;
-        min-height: 700px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-sidebar::after {
+        content: '';
+        position: absolute;
+        bottom: -50px;
+        right: -50px;
+        width: 100px;
+        height: 100px;
+        background: var(--primary-color);
+        opacity: 0.1;
+        border-radius: 50%;
     }
 
     .profile-menu {
         list-style: none;
         padding: 0;
-        margin: 0;
+        margin: 2rem 0;
     }
 
     .profile-menu-item {
-        display: block;
-        padding: 1rem;
-        margin: 0.5rem 0;
-        border-radius: 8px;
-        color: white;
-        text-decoration: none !important;
-        transition: all 0.3s ease;
-    }
-
-    .profile-menu-item:hover {
-        color:white;
+        display: flex;
+        align-items: center;
+        padding: 1.2rem 1.5rem;
+        margin: 0.8rem 0;
+        border-radius: 12px;
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
     }
 
     .profile-menu-item.active {
-        background: var(--primary-color);
-        color: var(--secondary-color);
+        background: rgba(255, 215, 0, 0.15);
+        color: var(--primary-color);
     }
 
     .profile-content {
         flex: 1;
-        padding: 2rem;
+        padding: 3rem 3.5rem;
         background: var(--background-color);
-        min-height: 700px;
     }
 
     .profile-section {
         display: none;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: sectionEnter 0.4s ease forwards;
     }
 
     .profile-section.active {
         display: block;
     }
 
-    .avatar-upload {
+    .avatar-container {
+        width: 160px;
+        height: 160px;
+        margin: 0 auto 2rem;
         position: relative;
-        width: 150px;
-        margin: 1rem 0;
+        border-radius: 50%;
+        background: linear-gradient(45deg, var(--primary-color) 0%, #FFE566 100%);
+        padding: 4px;
     }
 
     .avatar-preview {
-        width: 150px;
-        height: 150px;
+        width: 100%;
+        height: 100%;
         border-radius: 50%;
         object-fit: cover;
-        border: 3px solid var(--primary-color);
-    }
-
-    .avatar-upload label {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        background: white;
-        padding: 0.5rem;
-        border-radius: 50%;
-        cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        border: 3px solid white;
     }
 
     .form-group {
         margin-bottom: 1.5rem;
     }
 
-    .form-label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        color: var(--secondary-color);
-    }
-
     .form-input {
         width: 100%;
-        padding: 0.8rem;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        transition: border-color 0.3s ease;
-    }
-
-    .form-input:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(255, 213, 2, 0.2);
+        padding: 1rem;
+        border: 2px solid #E8EDF3;
+        border-radius: 10px;
+        transition: all 0.3s ease;
     }
 
     .btn-primary {
-        background: var(--primary-color);
+        background: linear-gradient(135deg, var(--primary-color) 0%, #FFE566 100%);
         color: var(--secondary-color);
-        padding: 0.8rem 1.5rem;
+        padding: 1rem 2rem;
         border: none;
-        border-radius: 8px;
-        cursor: pointer;
+        border-radius: 10px;
         font-weight: 600;
-        transition: transform 0.2s ease;
+        cursor: pointer;
     }
 
-    .btn-primary:hover {
-        transform: translateY(-2px);
+    .social-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
     }
 
-    .document-link {
-        display: inline-flex;
-        align-items: center;
-        color: var(--secondary-color);
-        text-decoration: none;
-        padding: 0.5rem;
-        border-radius: 6px;
-        transition: background 0.3s ease;
+    .social-input-group {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     }
 
-    .document-link:hover {
-        background: rgba(0, 0, 0, 0.05);
+    @keyframes sectionEnter {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         .profile-card {
             flex-direction: column;
         }
-        
-        .profile-sidebar {
-            width: 100%;
-            padding: 1rem;
-        }
-    }
-    .avatar-container {
-        width: 8rem;
-        height: 8rem;
-    }
-
-    .avatar-preview {
-        transition: filter 0.3s ease;
-    }
-
-    #avatarMessages {
-        min-height: 1.5rem;
     }
 </style>
 {% endblock %}
@@ -179,113 +159,146 @@
 {% block content %}
 <div class="profile-container">
     <div class="profile-card">
-        <!-- Sidebar Menu -->
+        <!-- Sidebar -->
         <div class="profile-sidebar">
-            <div class="avatar-upload">
-                <div class="avatar-container relative group">
-                    <!-- Avatar Preview with Loading State -->
-                    <img src="{{ user.profile.image.url|default:'/static/default-avatar.jpg' }}" 
-                         class="avatar-preview w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg transition-all duration-300 group-hover:brightness-75" 
-                         alt="Profile Picture" 
-                         id="avatarPreview">
-                    
-                    <!-- Upload Overlay -->
-                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <form method="POST" enctype="multipart/form-data" id="avatarForm" class="text-center">
-                            {% csrf_token %}
-                            <label class="cursor-pointer p-2 bg-white/90 rounded-full shadow-md hover:bg-white transition-colors duration-200">
-                                <input type="file" 
-                                       name="image" 
-                                       id="avatarInput" 
-                                       class="hidden" 
-                                       accept="image/*"
-                                       aria-label="Upload profile picture">
-                                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                          d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                          d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                </svg>
-                            </label>
-                        </form>
-                    </div>
-            
-                    <!-- Loading Spinner -->
-                    <div id="avatarLoading" 
-                         class="absolute inset-0 hidden items-center justify-center bg-black/50 rounded-full">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                    </div>
-                </div>
-            
-                <!-- Error/Success Messages -->
-                <div id="avatarMessages" class="mt-2 text-sm text-center"></div>
+            <div class="avatar-container">
+                <img src="{{ user.profile.image.url|default:'/static/default-avatar.jpg' }}" 
+                     class="avatar-preview" 
+                     alt="Profile Picture" 
+                     id="avatarPreview">
+                <form method="POST" enctype="multipart/form-data" id="avatarForm">
+                    {% csrf_token %}
+                    <label class="cursor-pointer absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                        <input type="file" name="image" id="avatarInput" class="hidden" accept="image/*">
+                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </label>
+                </form>
             </div>
-            
-            <ul class="profile-menu">
-                <li><a href="#general" class="profile-menu-item active">General Settings</a></li>
-                <li><a href="#social" class="profile-menu-item">Social Links</a></li>
-                <li><a href="#security" class="profile-menu-item">Security</a></li>
-            </ul>
+
+            <nav>
+                <ul class="profile-menu">
+                    <li>
+                        <a href="#general" class="profile-menu-item active">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            General Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#social" class="profile-menu-item">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            Social Links
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#security" class="profile-menu-item">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                            Security
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
         <!-- Main Content -->
         <div class="profile-content">
             <!-- General Settings -->
-            <div id="general" class="profile-section active">
-                <h2>Profile Settings</h2>
+            <section id="general" class="profile-section active">
+                <h2 class="text-2xl font-bold mb-6">Profile Settings</h2>
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="form-group">
-                        <label class="form-label">Username</label>
-                        <input type="text" name="username" value="{{ user.username }}" class="form-input" required>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-group">
+                            <label class="block mb-2 font-medium">Username</label>
+                            <input type="text" name="username" value="{{ user.username }}" 
+                                   class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="block mb-2 font-medium">Email</label>
+                            <input type="email" name="email" value="{{ user.email }}" 
+                                   class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="block mb-2 font-medium">Phone</label>
+                            <input type="tel" name="phone" value="{{ user.profile.phone }}" 
+                                   class="form-input" pattern="[0-9]{10}">
+                        </div>
+                        <div class="form-group">
+                            <label class="block mb-2 font-medium">Website</label>
+                            <input type="url" name="website" value="{{ user.profile.website }}" 
+                                   class="form-input">
+                        </div>
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" value="{{ user.email }}" class="form-input" required>
+                    <div class="mt-8">
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                        {% if user.profile.role == 'User' %}
+                        <a href="{% url 'role-selection' %}" class="btn-primary ml-4">Select Role</a>
+                        {% endif %}
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Phone Number</label>
-                        <input type="tel" name="phone_number" value="{{ user.profile.phone_number }}" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Website</label>
-                        <input type="url" name="website" value="{{ user.profile.website }}" class="form-input">
-                    </div>
-
-      
-                  
-
-                    <button type="submit" class="btn-primary">Save Changes</button>
                 </form>
-            </div>
+            </section>
 
-            <!-- Social Media Settings -->
-            <div id="social" class="profile-section">
-                <h2>Social Links</h2>
-                <form method="POST">
+            <!-- Social Links -->
+            <section id="social" class="profile-section">
+                <h2 class="text-2xl font-bold mb-6">Social Connections</h2>
+                <form method="POST" class="social-grid">
                     {% csrf_token %}
-                    <div class="form-group">
-                        <label class="form-label">LinkedIn</label>
-                        <input type="url" name="linkedin_link" value="{{ user.profile.linkedin_link }}" class="form-input">
+                    <div class="social-input-group">
+                        <label class="block mb-2 font-medium">
+                            <svg class="w-5 h-5 inline mr-2" viewBox="0 0 24 24" fill="#0077b5">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                            </svg>
+                            LinkedIn
+                        </label>
+                        <input type="url" name="linkedin" value="{{ user.profile.linkedin }}" 
+                               class="form-input" placeholder="https://linkedin.com/in/username">
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Facebook</label>
-                        <input type="url" name="facebook_link" value="{{ user.profile.facebook_link }}" class="form-input">
+                    <div class="social-input-group">
+                        <label class="form-label">
+                            <svg class="w-5 h-5 mr-2 inline" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+                            </svg>
+                            Facebook URL
+                        </label>
+                        <input type="url" name="facebook" value="{{ user.profile.facebook }}" 
+                               class="form-input" placeholder="https://facebook.com/username"
+                               pattern="https://.*facebook.com.*">
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Instagram</label>
-                        <input type="url" name="instagram_link" value="{{ user.profile.instagram_link }}" class="form-input">
+                    <!-- Instagram -->
+                    <div class="social-input-group">
+                        <label class="form-label">
+                            <svg class="w-5 h-5 mr-2 inline" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                            Instagram URL
+                        </label>
+                        <input type="url" name="instagram" value="{{ user.profile.instagram }}" 
+                               class="form-input" placeholder="https://instagram.com/username"
+                               pattern="https://.*instagram.com.*">
                     </div>
 
-                    <button type="submit" class="btn-primary">Update Social Links</button>
+                    <div class="mt-6">
+                        <button type="submit" class="btn-primary">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Update Social Links
+                        </button>
+                    </div>
                 </form>
-            </div>
+            </section>
 
-            <!-- Security Settings -->
             <div id="security" class="profile-section">
                 <h2>Security Settings</h2>
                 <form method="POST" action="{% url 'password_change' %}">
@@ -311,6 +324,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     // Tab Switching

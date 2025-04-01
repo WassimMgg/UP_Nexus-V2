@@ -124,7 +124,10 @@ def profile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
-
+        request.user.profile.linkedin = request.POST.get('linkedin')
+        request.user.profile.facebook = request.POST.get('facebook')
+        request.user.profile.instagram = request.POST.get('instagram')
+        request.user.profile.save()
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
@@ -143,7 +146,7 @@ def profile(request):
 def public_profile(request, username):
     user = get_object_or_404(User, username=username)
     profile = get_object_or_404(Profile, user=user)
-    user_posts = Post.objects.filter(author=user).order_by('-date_posted')
+    user_posts = Post.objects.filter(author=user, status='approved' ).order_by('-date_posted')
     
     context = {
         'profile_user': user,
@@ -205,8 +208,9 @@ def avatar_upload(request):
         return JsonResponse({'success': True})
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+@login_required
 def ecosystem(request):
-    profiles = Profile.objects.all()
+    profiles = Profile.objects.exclude( role='User')
     context = {'profiles': profiles}
     return render(request, 'users/ecosystem.html', context)
 

@@ -23,13 +23,11 @@ from blog import views as blog_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('dj_admin/', include('new_admin.home.urls')),
     path('register/', user_views.register, name='register'),
     path('login/', user_views.login_view, name='login'),
     path('profile/', user_views.profile, name='profile'),
     path('profile/<str:username>/', user_views.public_profile, name='public-profile'),
     path('ecosystem/', user_views.ecosystem, name='ecosystem'),
-    path('accounts/', include('django.contrib.auth.urls')),
     path('avatar-upload/', user_views.avatar_upload, name='avatar_upload'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('', include('blog.urls')),

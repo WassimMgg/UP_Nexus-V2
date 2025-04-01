@@ -2,6 +2,34 @@
 {% load static %}
 
 {% block content %}
+<style>
+    .date-input-container {
+        position: relative;
+    }
+    
+    .date-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        pointer-events: none;
+    }
+    
+    input[type="date"] {
+        appearance: none;
+        padding-right: 2.5rem;
+    }
+    
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+</style>
 
     <div class="form-container">
         
@@ -27,10 +55,29 @@
             </div>
 
             <div class="form-field">
-                <label for="{{ form.event_date.id_for_label }}" class="form-label" type="date"> 
-                    Date
+                <label for="{{ form.event_date.id_for_label }}" class="form-label"> 
+                    Start Date
                 </label>
                 {{ form.event_date }}
+                {% if form.event_date.errors %}
+                    <div class="error">{{ form.event_date.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-field">
+                <label for="{{ form.event_end_date.id_for_label }}" class="form-label">
+                    End Date
+                </label>
+                <div class="date-input-container">
+                    {{ form.event_end_date }}
+                    <i class="fas fa-calendar-alt date-icon"></i>
+                </div>
+                {% if form.event_end_date.errors %}
+                    <div class="error">{{ form.event_end_date.errors }}</div>
+                {% endif %}
+                {% if form.non_field_errors %}
+                    <div class="error">{{ form.non_field_errors }}</div>
+                {% endif %}
             </div>
 
             <div class="form-field">
@@ -87,4 +134,28 @@
             </div>
         </form>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startDateInput = document.getElementById('{{ form.event_date.id_for_label }}');
+            const endDateInput = document.getElementById('{{ form.event_end_date.id_for_label }}');
+        
+            startDateInput.addEventListener('change', function() {
+                if (this.value && endDateInput.value) {
+                    if (new Date(this.value) > new Date(endDateInput.value)) {
+                        endDateInput.value = this.value;
+                    }
+                }
+                endDateInput.min = this.value;
+            });
+        
+            endDateInput.addEventListener('change', function() {
+                if (startDateInput.value && this.value) {
+                    if (new Date(this.value) < new Date(startDateInput.value)) {
+                        alert('End date must be after start date');
+                        this.value = startDateInput.value;
+                    }
+                }
+            });
+        });
+        </script>
 {% endblock %}

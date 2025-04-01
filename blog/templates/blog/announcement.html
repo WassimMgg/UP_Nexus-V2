@@ -16,9 +16,11 @@
       ensuring that users stay informed about the latest developments, events,
       or changes.
     </p>
-
+   
+    {% if user.is_authenticated and user.profile.role != 'User' %}
     <a href="{% url 'post-create' %}" class="btn">Add new Post</a>
-
+  {% endif %}
+  
   </section>
   
   <!-- Recent Events Heading -->
@@ -29,8 +31,10 @@
   <!-- Post Cards -->
 
   <div class="card-container">
-    {% for post in posts %}
+    {% for post in posts  %}
+     
       {% include 'blog/includes/PostCard.html'%}
+      
     {% endfor %}
    
     </div>
