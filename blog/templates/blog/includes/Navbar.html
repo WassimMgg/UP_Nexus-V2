@@ -12,7 +12,12 @@
         <div class="flex justify-between items-center">
             <!-- Logo Section -->
             <a href="{% url 'blog-home' %}" class="flex items-center flex-shrink-0">
-                <img class="h-9 w-13 mr-2" src="{% static 'blog/assets/Logo_Up nexus 1.svg' %}" alt="Logo">
+                <img 
+                class="max-w-full h-auto mr-2 md:h-12 md:w-32" 
+                src="{% static 'blog/assets/Logo_Up nexus 1.svg' %}" 
+                alt="Logo"
+                style="max-width: 130px; height: 36px;" 
+              >
             </a>
 
             <!-- Desktop Navigation -->
@@ -52,26 +57,30 @@
             </div>
             {% endif %}
             {% if user.is_authenticated %}
-            <div class="hidden lg:flex items-center gap-4">
+            <div class="flex items-center gap-4">
                 <!-- Profile Link -->
-                <a href="{% url 'public-profile' user.username %}" class="flex items-center px-4 py-2 space-x-2 transition-all duration-300 
+                <a href="{% url 'public-profile' user.username %}" class="flex items-center px-2 md:px-4 py-2 transition-all duration-300 
                     bg-opacity-10 hover:bg-opacity-20 bg-[#ffd502] rounded-lg group">
                     <i class="fas fa-user-circle text-[#ffd502] group-hover:text-[#d4b000]"></i>
-                    <span class="text-gray-700 group-hover:text-[#d4b000] font-medium">Profile</span>
+                    <span class="hidden md:inline ml-2 text-gray-700 group-hover:text-[#d4b000] font-medium">
+                        Profile
+                    </span>
                 </a>
             
                 <!-- Logout Button -->
                 <form method="POST" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="flex items-center px-4 py-2 space-x-2 transition-all duration-300 
+                    <button type="submit" class="flex items-center px-2 md:px-4 py-2 transition-all duration-300 
                         bg-opacity-10 hover:bg-opacity-20 bg-red-500 rounded-lg group">
                         <i class="fas fa-sign-out-alt text-red-500 group-hover:text-red-600"></i>
-                        <span class="text-gray-700 group-hover:text-red-600 font-medium">Logout</span>
+                        <span class="hidden md:inline ml-2 text-gray-700 group-hover:text-red-600 font-medium">
+                            Logout
+                        </span>
                     </button>
                 </form>
             </div>
             {% else %}
-            <div class="hidden lg:flex items-center gap-4">
+            <div class=" lg:flex items-center gap-4">
                 <!-- Get Started Button -->
                 <div >
                     <a href="{% url 'register' %}" class="btn ">Get Started</a>
@@ -104,6 +113,7 @@
                     <a href="#features">News</a>
                 </li>
             </ul>
+           
         </div>
     </div>
 </nav>

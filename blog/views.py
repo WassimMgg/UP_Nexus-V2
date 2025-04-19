@@ -11,7 +11,9 @@ from .forms import PostForm
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
+import logging
 
+logger = logging.getLogger(__name__)
 
 def home(request):
     posts = Post.objects.all().order_by('-date_posted')
@@ -25,7 +27,6 @@ def post_detail(request, pk):
 
 @login_required
 def post_create(request):
-    # Check if user has a verified role
     try:
         profile = request.user.profile
         if not profile.is_verified or not profile.role:
@@ -36,14 +37,18 @@ def post_create(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            # Create post but don't publish immediately
-            post = form.save(commit=False)
-            post.author = request.user
-            post.status = 'pending'  # Set status here
-            post.save()
-
-            messages.info(request, 'Your post has been submitted for admin approval.')
-            return redirect('blog-home')
+            try:
+                post = form.save(commit=False)
+                post.author = request.user
+                post.status = 'pending'
+                post.save()
+                messages.success(request, 'Post submitted for approval.')
+                return redirect('blog-home')
+            except Exception as e:
+                logger.error(f"Post save error: {e}")
+                messages.error(request, 'Error saving post. Please try again.')
+        else:
+            messages.error(request, 'Invalid form data. Please correct the errors.')
     else:
         form = PostForm()
 
@@ -89,16 +94,11 @@ def announcement(request):
     return render(request, 'blog/announcement.html', {'title': 'Announcement', 'posts': approved_posts})
 
 @staff_member_required
-def approve_post(request, post_request_id):
-    post_request = get_object_or_404(Post, id=post_request_id)
-    post_request.status = 'approved'
-    post_request.save()
-
-    # Update the Post's status directly
-    post = post_request.post
+@staff_member_required
+def approve_post(request, post_id):  # Renamed parameter for clarity
+    post = get_object_or_404(Post, id=post_id)
     post.status = 'approved'
     post.save()
-
     messages.success(request, f"Post '{post.title}' has been approved.")
     return redirect('admin_post_requests')
 
@@ -115,7 +115,7 @@ def reject_post(request, post_request_id):
 
 @staff_member_required
 def admin_post_requests(request):
-    post_requests = Post.objects.filter(status='pending').select_related('post')
+    post_requests = Post.objects.filter(status='pending')  # Remove select_related
     return render(request, 'admin/post_requests.html', {'post_requests': post_requests})
 @login_required
 def search(request):
