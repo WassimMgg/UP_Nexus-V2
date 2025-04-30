@@ -1,0 +1,97 @@
+{% extends "blog/base/base.html" %}
+{% block content %}
+
+<style>
+  .form-container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .form-box {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 2.5rem;
+    max-width: 600px;
+    width: 100%;
+  }
+  .form-heading {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #2d3748;
+  }
+  .textarea-content {
+    width: 100%;
+    min-height: 120px;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    resize: vertical;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+  .btn-submit {
+    background: #dc3545;
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    border: none;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  .btn-submit:hover {
+    background: #fff;
+    color: #dc3545;
+    transform: translateY(-1px);
+  }
+  .btn-cancel {
+    display: inline-block;
+    text-decoration: none !important;
+    background: #6c757d;
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    border: none;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  .btn-cancel:hover {
+    background: #fff;
+    color: #6c757d;
+    transform: translateY(-1px);
+  }
+</style>
+
+<div class="form-container">
+  <div class="form-box">
+    <h2 class="form-heading">
+      {% if comment.pk %}Edit Comment{% else %}New Comment{% endif %}
+    </h2>
+
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <textarea name="content"
+                class="textarea-content"
+                placeholder="Write your comment…">{{ form.content.value|default_if_none:'' }}</textarea>
+      {{ form.content.errors }}
+
+      <div class="button-group">
+        <button type="submit" class="btn-submit">
+          {% if comment.pk %}Update{% else %}Post{% endif %}
+        </button>
+        <a href="{% url 'post-detail' comment.post.pk %}" class="btn-cancel">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock content %}

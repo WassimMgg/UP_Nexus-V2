@@ -11,5 +11,7 @@ urlpatterns = [
     path('announcement/', views.announcement, name='announcement'),
     path('approve-post/<int:post_request_id>/', views.approve_post, name='approve_post'),
     path('reject-post/<int:post_request_id>/', views.reject_post, name='reject_post'),
+    path('comment/<int:pk>/edit/',   views.comment_update, name='comment-update'),
+    path('comment/<int:pk>/delete/', views.comment_delete, name='comment-delete'),
   
 ] 

@@ -7,7 +7,6 @@
 .container {
   margin: auto;
 }
-
 html {
   background-color: #fbfcfb;
 }
@@ -379,8 +378,7 @@ html {
 /* Post Card styling */
 .card-container {
   display: flex;
-  width: 1340px;
-  justify-content: space-between;
+  justify-content: space-around;
   flex-wrap: wrap;
   margin: auto;
 }

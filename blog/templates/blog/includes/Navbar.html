@@ -6,6 +6,127 @@
     a{
         text-decoration: none !important;
     }
+
+    .navbar {
+        background-color: #333;
+        overflow: hidden;
+        padding: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .navbar a {
+        float: left;
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    .navbar a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+
+    .navbar .right {
+        float: right;
+    }
+
+    /* Enhanced Icon Buttons */
+    .icon-button {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        background: rgba(255, 213, 2, 0.1);
+        overflow: hidden;
+    }
+
+    .icon-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(255, 213, 2, 0.2) 0%, rgba(255, 213, 2, 0) 70%);
+        opacity: 0;
+        transform: scale(0.5);
+        transition: all 0.3s ease;
+    }
+
+    .icon-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(255, 213, 2, 0.15);
+    }
+
+    .icon-button:hover::before {
+        opacity: 1;
+        transform: scale(1.5);
+    }
+
+    .icon-button:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 6px rgba(255, 213, 2, 0.1);
+    }
+
+    .icon-button i {
+        color: #ffd502;
+        font-size: 1.25rem;
+        transition: all 0.3s ease;
+        z-index: 2;
+    }
+
+    .icon-button:hover i {
+        transform: scale(1.15);
+        color: #e6c000;
+    }
+
+    /* Notification icon specific */
+    .notification-icon {
+        position: relative;
+    }
+
+    .notification-badge {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 10px;
+        height: 10px;
+        background: #ef4444;
+        border-radius: 50%;
+        border: 2px solid white;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+        70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    /* Logout icon specific */
+    .logout-icon {
+        background: rgba(239, 68, 68, 0.1);
+    }
+
+    .logout-icon i {
+        color: #ef4444;
+    }
+
+    .logout-icon:hover {
+        box-shadow: 0 6px 12px rgba(239, 68, 68, 0.15);
+    }
+
+    .logout-icon::before {
+        background: radial-gradient(circle, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0) 70%);
+    }
 </style>
 <nav class="sticky top-0 z-50 py-3 backdrop-blur-lg border-b border-neutral-700/80">
     <div class="container px-4 mx-auto relative lg:text-sm">
@@ -35,15 +156,14 @@
                     <a class="nav-link " href="{% url 'announcement' %}">Announcement</a>
                 </li>
                 <li >
-                    <a class="nav-link " href="#features">News</a>
+                    <a class="nav-link " href="{% url 'news' %}">News</a>
                 </li>
             </ul>
 
-            <!-- Right Section -->
             {% if user.is_authenticated %}
             <div class="flex items-center gap-4">
                 <form method="GET" action="{% url 'search' %}">
-                    <div class="box flex items-center bg-transparent">
+                    <div class="box max-w-3xs  flex items-center bg-transparent">
                         <button type="submit" class="pr-2 hover:text-yellow-400">
                             <i class="fas fa-search"></i>
                         </button>
@@ -54,17 +174,19 @@
                                class="border-none bg-transparent focus:outline-none">
                     </div>
                 </form>
-            </div>
-            {% endif %}
-            {% if user.is_authenticated %}
-            <div class="flex items-center gap-4">
+                
+                <a href="{% url 'public-profile' user.username %}" class="flex items-center  px-2 md:px-4 py-2 transition-all duration-300 
+                    bg-opacity-10 hover:bg-opacity-20 bg-[#ffd502] rounded-lg group">
+                    <i class="fa-regular fa-bell text-[#ffd502] text-2xl group-hover:text-[#d4b000] "></i>
+                    
+                </a>
                 <!-- Profile Link -->
                 <a href="{% url 'public-profile' user.username %}" class="flex items-center px-2 md:px-4 py-2 transition-all duration-300 
                     bg-opacity-10 hover:bg-opacity-20 bg-[#ffd502] rounded-lg group">
-                    <i class="fas fa-user-circle text-[#ffd502] group-hover:text-[#d4b000]"></i>
-                    <span class="hidden md:inline ml-2 text-gray-700 group-hover:text-[#d4b000] font-medium">
+                    <i class="fas fa-user-circle text-[#ffd502] text-2xl group-hover:text-[#d4b000]"></i>
+                    <!-- <span class="hidden md:inline ml-2 text-gray-700 group-hover:text-[#d4b000] font-medium">
                         Profile
-                    </span>
+                    </span> -->
                 </a>
             
                 <!-- Logout Button -->
@@ -72,10 +194,10 @@
                     {% csrf_token %}
                     <button type="submit" class="flex items-center px-2 md:px-4 py-2 transition-all duration-300 
                         bg-opacity-10 hover:bg-opacity-20 bg-red-500 rounded-lg group">
-                        <i class="fas fa-sign-out-alt text-red-500 group-hover:text-red-600"></i>
-                        <span class="hidden md:inline ml-2 text-gray-700 group-hover:text-red-600 font-medium">
+                        <i class="fas fa-sign-out-alt text-2xl text-red-500 group-hover:text-red-600"></i>
+                        <!-- <span class="hidden md:inline ml-2 text-gray-700 group-hover:text-red-600 font-medium">
                             Logout
-                        </span>
+                        </span> -->
                     </button>
                 </form>
             </div>
@@ -110,7 +232,7 @@
                     <a href="{% url 'announcement' %}">Announcement</a>
                 </li>
                 <li class="py-4 nav-link">
-                    <a href="#features">News</a>
+                    <a href="{% url 'news' %}">News</a>
                 </li>
             </ul>
            

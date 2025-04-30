@@ -9,12 +9,20 @@
         --accent-color: #4A90E2;
         --background-color: #F8F9FF;
         --text-color: #2A2F35;
+        --success-color: #4CAF50;
+        --error-color: #F44336;
     }
 
     .profile-container {
         max-width: 1400px;
         margin: 3rem auto;
         padding: 0 2rem;
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .profile-card {
@@ -22,9 +30,17 @@
         border-radius: 20px;
         box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
         display: flex;
-        min-height: 800px;
+        min-height: fit-content;
         position: relative;
-        transition: transform 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     }
 
     .profile-sidebar {
@@ -34,6 +50,21 @@
         color: white;
         position: relative;
         overflow: hidden;
+        z-index: 1;
+    }
+
+    .profile-sidebar::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        left: -50px;
+        width: 150px;
+        height: 150px;
+        background: var(--primary-color);
+        opacity: 0.05;
+        border-radius: 50%;
+        z-index: -1;
+        animation: float 15s ease-in-out infinite;
     }
 
     .profile-sidebar::after {
@@ -41,11 +72,19 @@
         position: absolute;
         bottom: -50px;
         right: -50px;
-        width: 100px;
-        height: 100px;
+        width: 150px;
+        height: 150px;
         background: var(--primary-color);
         opacity: 0.1;
         border-radius: 50%;
+        z-index: -1;
+        animation: float 20s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(20px, 20px) rotate(5deg); }
+        100% { transform: translate(0, 0) rotate(0deg); }
     }
 
     .profile-menu {
@@ -64,6 +103,12 @@
         text-decoration: none;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
+        overflow: hidden;
+    }
+
+    .profile-menu-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        transform: translateX(5px);
     }
 
     .profile-menu-item.active {
@@ -71,10 +116,35 @@
         color: var(--primary-color);
     }
 
+    .profile-menu-item.active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background: var(--primary-color);
+        border-radius: 0 4px 4px 0;
+    }
+
+    .profile-menu-item svg {
+        transition: transform 0.3s ease;
+    }
+
+    .profile-menu-item:hover svg {
+        transform: scale(1.2);
+    }
+
     .profile-content {
         flex: 1;
-        padding: 3rem 3.5rem;
+        padding: 3rem 7rem;
+        margin: 0%;
         background: var(--background-color);
+        height: auto;
+        position: relative;
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
+            radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 20%);
     }
 
     .profile-section {
@@ -96,6 +166,12 @@
         border-radius: 50%;
         background: linear-gradient(45deg, var(--primary-color) 0%, #FFE566 100%);
         padding: 4px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .avatar-container:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
     }
 
     .avatar-preview {
@@ -104,10 +180,66 @@
         border-radius: 50%;
         object-fit: cover;
         border: 3px solid white;
+        transition: filter 0.3s ease;
+    }
+
+    .avatar-edit-label {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 2;
+    }
+
+    .avatar-edit-label:hover {
+        transform: scale(1.1);
+        background: var(--primary-color);
+    }
+
+    .avatar-edit-label svg {
+        transition: transform 0.3s ease;
+    }
+
+    .avatar-edit-label:hover svg {
+        transform: rotate(15deg);
+    }
+
+    .avatar-status {
+        margin-top: 10px;
+        text-align: center;
+        font-size: 0.9rem;
+        height: 20px;
+        transition: all 0.3s ease;
     }
 
     .form-group {
         margin-bottom: 1.5rem;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .form-group:hover {
+        transform: translateY(-3px);
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text-color);
+        transition: color 0.3s ease;
+    }
+
+    .form-group:hover .form-label {
+        color: var(--primary-color);
     }
 
     .form-input {
@@ -116,6 +248,18 @@
         border: 2px solid #E8EDF3;
         border-radius: 10px;
         transition: all 0.3s ease;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .form-input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+        outline: none;
+    }
+
+    .form-input:hover {
+        border-color: #D0D7E2;
     }
 
     .btn-primary {
@@ -126,6 +270,60 @@
         border-radius: 10px;
         font-weight: 600;
         cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary:active {
+        transform: translateY(1px);
+    }
+
+    .btn-primary::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+    }
+
+    .btn-primary:focus:not(:active)::after {
+        animation: ripple 1s ease-out;
+    }
+
+    @keyframes ripple {
+        0% {
+            transform: scale(0, 0);
+            opacity: 0.5;
+        }
+        100% {
+            transform: scale(20, 20);
+            opacity: 0;
+        }
+    }
+
+    .btn-icon {
+        margin-right: 0.5rem;
+        transition: transform 0.3s ease;
+    }
+
+    .btn-primary:hover .btn-icon {
+        transform: rotate(15deg);
     }
 
     .social-grid {
@@ -139,6 +337,114 @@
         border-radius: 12px;
         padding: 1.5rem;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .social-input-group::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 0;
+        background: var(--primary-color);
+        transition: height 0.3s ease;
+    }
+
+    .social-input-group:hover {
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+        border-color: #E8EDF3;
+        transform: translateY(-5px);
+    }
+
+    .social-input-group:hover::before {
+        height: 100%;
+    }
+
+    .social-icon {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+        vertical-align: middle;
+        transition: transform 0.3s ease;
+    }
+
+    .social-input-group:hover .social-icon {
+        transform: scale(1.2);
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -8px;
+        width: 40px;
+        height: 4px;
+        background: var(--primary-color);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+    }
+
+    .section-title:hover::after {
+        width: 100%;
+    }
+
+    .notification {
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        display: none;
+        animation: slideDown 0.3s ease forwards;
+        transform-origin: top center;
+    }
+
+    @keyframes slideDown {
+        from { transform: scaleY(0); opacity: 0; }
+        to { transform: scaleY(1); opacity: 1; }
+    }
+
+    .notification.success {
+        background-color: rgba(76, 175, 80, 0.1);
+        color: var(--success-color);
+        border-left: 4px solid var(--success-color);
+    }
+
+    .notification.error {
+        background-color: rgba(244, 67, 54, 0.1);
+        color: var(--error-color);
+        border-left: 4px solid var(--error-color);
+    }
+
+    .password-strength {
+        height: 4px;
+        background: #E8EDF3;
+        border-radius: 2px;
+        margin-top: 0.5rem;
+        overflow: hidden;
+    }
+
+    .password-strength-bar {
+        height: 100%;
+        width: 0;
+        transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    .password-strength-text {
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
     }
 
     @keyframes sectionEnter {
@@ -148,9 +454,96 @@
         }
     }
 
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+
+    /* Role selection button animation */
+    .btn-primary.ml-4 {
+        background: linear-gradient(135deg, #4A90E2 0%, #5CA9FB 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary.ml-4::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .btn-primary.ml-4:hover::before {
+        left: 100%;
+    }
+
+    @media (max-width: 1200px) {
+        .profile-content {
+            padding: 2rem 3rem;
+        }
+    }
+
     @media (max-width: 1024px) {
         .profile-card {
             flex-direction: column;
+        }
+        
+        .profile-sidebar {
+            width: 100%;
+            padding: 2rem 1.5rem;
+        }
+        
+        .avatar-container {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .profile-menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .profile-menu-item {
+            margin: 0;
+            padding: 0.8rem 1.2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .profile-container {
+            padding: 0 1rem;
+            margin: 1.5rem auto;
+        }
+        
+        .profile-content {
+            padding: 1.5rem;
+        }
+        
+        .social-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .profile-menu-item {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .avatar-container {
+            width: 100px;
+            height: 100px;
         }
     }
 </style>
@@ -168,15 +561,16 @@
                      id="avatarPreview">
                 <form method="POST" enctype="multipart/form-data" id="avatarForm">
                     {% csrf_token %}
-                    <label class="cursor-pointer absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
-                        <input type="file" name="image" id="avatarInput" class="hidden" accept="image/*">
-                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <label class="avatar-edit-label" for="avatarInput" title="Change profile picture">
+                        <input type="file" name="image" id="avatarInput" style="display: none;" accept="image/*">
+                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
                     </label>
                 </form>
             </div>
+            <div class="avatar-status" id="avatarStatus"></div>
 
             <nav>
                 <ul class="profile-menu">
@@ -197,51 +591,70 @@
                             Social Links
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="#security" class="profile-menu-item">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                             </svg>
                             Security
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </nav>
         </div>
 
         <!-- Main Content -->
         <div class="profile-content">
+            <!-- Notifications -->
+            <div id="generalNotification" class="notification"></div>
+
             <!-- General Settings -->
             <section id="general" class="profile-section active">
-                <h2 class="text-2xl font-bold mb-6">Profile Settings</h2>
-                <form method="POST" enctype="multipart/form-data">
+                <h2 class="section-title">Profile Settings</h2>
+                <form method="POST" enctype="multipart/form-data" id="generalForm">
                     {% csrf_token %}
+                    <input type="hidden" name="form_type" value="general">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="form-group">
-                            <label class="block mb-2 font-medium">Username</label>
-                            <input type="text" name="username" value="{{ user.username }}" 
+                            <label class="form-label" for="username">Username</label>
+                            <input type="text" name="username" id="username" value="{{ user.username }}" 
                                    class="form-input" required>
                         </div>
                         <div class="form-group">
-                            <label class="block mb-2 font-medium">Email</label>
-                            <input type="email" name="email" value="{{ user.email }}" 
+                            <label class="form-label" for="email">Email</label>
+                            <input type="email" name="email" id="email" value="{{ user.email }}" 
                                    class="form-input" required>
                         </div>
                         <div class="form-group">
-                            <label class="block mb-2 font-medium">Phone</label>
-                            <input type="tel" name="phone" value="{{ user.profile.phone }}" 
-                                   class="form-input" pattern="[0-9]{10}">
+                            <label class="form-label" for="phone_number">Phone</label>
+                            <input type="tel" name="phone_number" id="phone_number" value="{{ user.profile.phone_number }}" 
+                                   class="form-input" pattern="[0-9]{10}" placeholder="10-digit phone number">
                         </div>
                         <div class="form-group">
-                            <label class="block mb-2 font-medium">Website</label>
-                            <input type="url" name="website" value="{{ user.profile.website }}" 
-                                   class="form-input">
+                            <label class="form-label" for="website">Website</label>
+                            <input type="url" name="website" id="website" value="{{ user.profile.website }}" 
+                                   class="form-input" placeholder="https://example.com">
                         </div>
+                        
                     </div>
+                    <div class="form-group mt-6">
+                            <label class="form-label" for="bio">Bio</label>
+                            <textarea name="bio" id="bio" class="form-input" placeholder="Tell us about yourself...">{{ user.profile.bio }}</textarea>
+                        </div>
                     <div class="mt-8">
-                        <button type="submit" class="btn-primary">Save Changes</button>
+                        <button type="submit" class="btn-primary">
+                            <svg class="w-5 h-5 mr-2 btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Save Changes
+                        </button>
                         {% if user.profile.role == 'User' %}
-                        <a href="{% url 'role-selection' %}" class="btn-primary ml-4">Select Role</a>
+                        <a href="{% url 'role-selection' %}" class="btn-primary ml-4">
+                            <svg class="w-5 h-5 mr-2 btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                            Select Role
+                        </a>
                         {% endif %}
                     </div>
                 </form>
@@ -249,48 +662,57 @@
 
             <!-- Social Links -->
             <section id="social" class="profile-section">
-                <h2 class="text-2xl font-bold mb-6">Social Connections</h2>
-                <form method="POST" class="social-grid">
+                <h2 class="section-title">Social Connections</h2>
+                <div id="socialNotification" class="notification"></div>
+                <form method="POST" class="social-grid" id="socialForm">
                     {% csrf_token %}
+                    <input type="hidden" name="form_type" value="social">
                     <div class="social-input-group">
-                        <label class="block mb-2 font-medium">
-                            <svg class="w-5 h-5 inline mr-2" viewBox="0 0 24 24" fill="#0077b5">
+                        <label class="form-label">
+                            <svg class="social-icon" viewBox="0 0 24 24" fill="#0077b5">
                                 <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                             </svg>
                             LinkedIn
                         </label>
-                        <input type="url" name="linkedin" value="{{ user.profile.linkedin }}" 
+                        <input type="url" name="linkedin_link" id="linkedin_link" value="{{ user.profile.linkedin_link }}" 
                                class="form-input" placeholder="https://linkedin.com/in/username">
                     </div>
 
                     <div class="social-input-group">
                         <label class="form-label">
-                            <svg class="w-5 h-5 mr-2 inline" viewBox="0 0 24 24" fill="currentColor">
+                            <svg class="social-icon" viewBox="0 0 24 24" fill="#1877F2">
                                 <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
                             </svg>
                             Facebook URL
                         </label>
-                        <input type="url" name="facebook" value="{{ user.profile.facebook }}" 
-                               class="form-input" placeholder="https://facebook.com/username"
-                               pattern="https://.*facebook.com.*">
+                        <input type="url" name="facebook_link" id="facebook_link" value="{{ user.profile.facebook_link }}" 
+                               class="form-input" placeholder="https://facebook.com/username">
                     </div>
 
                     <!-- Instagram -->
                     <div class="social-input-group">
                         <label class="form-label">
-                            <svg class="w-5 h-5 mr-2 inline" viewBox="0 0 24 24" fill="currentColor">
+                            <svg class="social-icon" viewBox="0 0 24 24" fill="url(#instagram-gradient)">
+                                <defs>
+                                    <linearGradient id="instagram-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#FFDC80" />
+                                        <stop offset="25%" style="stop-color:#FCAF45" />
+                                        <stop offset="50%" style="stop-color:#F77737" />
+                                        <stop offset="75%" style="stop-color:#F56040" />
+                                        <stop offset="100%" style="stop-color:#C13584" />
+                                    </linearGradient>
+                                </defs>
                                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                             </svg>
                             Instagram URL
                         </label>
-                        <input type="url" name="instagram" value="{{ user.profile.instagram }}" 
-                               class="form-input" placeholder="https://instagram.com/username"
-                               pattern="https://.*instagram.com.*">
+                        <input type="url" name="instagram_link" id="instagram_link" value="{{ user.profile.instagram_link }}" 
+                               class="form-input" placeholder="https://instagram.com/username">
                     </div>
 
-                    <div class="mt-6">
+                    <div class="mt-6 col-span-full">
                         <button type="submit" class="btn-primary">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 mr-2 btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                             </svg>
                             Update Social Links
@@ -299,35 +721,46 @@
                 </form>
             </section>
 
-            <div id="security" class="profile-section">
-                <h2>Security Settings</h2>
-                <form method="POST" action="{% url 'password_change' %}">
+            <!-- Security Settings -->
+            <!-- <section id="security" class="profile-section">
+                <h2 class="section-title">Security Settings</h2>
+                <div id="securityNotification" class="notification"></div>
+                <form method="POST" action="" id="securityForm">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label class="form-label">Current Password</label>
-                        <input type="password" name="old_password" class="form-input" required>
+                        <label class="form-label" for="old_password">Current Password</label>
+                        <input type="password" name="old_password" id="old_password" class="form-input" required>
                     </div>
             
                     <div class="form-group">
-                        <label class="form-label">New Password</label>
-                        <input type="password" name="new_password1" class="form-input" required>
+                        <label class="form-label" for="new_password1">New Password</label>
+                        <input type="password" name="new_password1" id="new_password1" class="form-input" required>
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                        </div>
+                        <div class="password-strength-text" id="passwordStrengthText"></div>
                     </div>
             
                     <div class="form-group">
-                        <label class="form-label">Confirm New Password</label>
-                        <input type="password" name="new_password2" class="form-input" required>
+                        <label class="form-label" for="new_password2">Confirm New Password</label>
+                        <input type="password" name="new_password2" id="new_password2" class="form-input" required>
                     </div>
             
-                    <button type="submit" class="btn-primary">Change Password</button>
+                    <button type="submit" class="btn-primary">
+                        <svg class="w-5 h-5 mr-2 btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        Change Password
+                    </button>
                 </form>
-            </div>
+            </section> -->
         </div>
     </div>
 </div>
 
 
 <script>
-    // Tab Switching
+    // Tab Switching with Animation
     document.querySelectorAll('.profile-menu-item').forEach(item => {
         item.addEventListener('click', function(e) {
             e.preventDefault();
@@ -335,74 +768,242 @@
             
             // Remove active classes
             document.querySelectorAll('.profile-menu-item').forEach(i => i.classList.remove('active'));
-            document.querySelectorAll('.profile-section').forEach(s => s.classList.remove('active'));
             
-            // Add active classes
+            // Hide all sections with fade out
+            document.querySelectorAll('.profile-section.active').forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    section.classList.remove('active');
+                    
+                    // Show target section with animation
+                    const targetSection = document.getElementById(targetId);
+                    targetSection.classList.add('active');
+                    setTimeout(() => {
+                        targetSection.style.opacity = '1';
+                        targetSection.style.transform = 'translateY(0)';
+                    }, 50);
+                }, 300);
+            });
+            
+            // Add active class to clicked item
             this.classList.add('active');
-            document.getElementById(targetId).classList.add('active');
         });
     });
 
-    // Avatar Preview
+    // Avatar Upload with Preview, AJAX and Animation
     document.getElementById('avatarInput').addEventListener('change', function(e) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            document.getElementById('avatarPreview').src = reader.result;
-        }
-        reader.readAsDataURL(this.files[0]);
-        document.getElementById('avatarForm').submit();
-    });
-    document.getElementById('avatarInput').addEventListener('change', function(e) {
-        const form = document.getElementById('avatarForm');
-        const preview = document.getElementById('avatarPreview');
-        const loading = document.getElementById('avatarLoading');
-        const messages = document.getElementById('avatarMessages');
-
-        // Show loading spinner
-        loading.classList.remove('hidden');
-        messages.textContent = '';
-
-        // Preview image before upload
         const file = this.files[0];
+        const statusElement = document.getElementById('avatarStatus');
+        const preview = document.getElementById('avatarPreview');
+        const avatarContainer = document.querySelector('.avatar-container');
+        
+        // Preview image before upload
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                preview.src = e.target.result;
+                preview.style.opacity = '0';
+                setTimeout(() => {
+                    preview.src = e.target.result;
+                    preview.style.opacity = '1';
+                }, 300);
             }
             reader.readAsDataURL(file);
+            
+            // Add loading animation
+            avatarContainer.classList.add('pulse');
+            
+            // Show loading status
+            statusElement.textContent = 'Uploading...';
+            statusElement.style.color = '#4A90E2';
+            
+            // Submit form via AJAX
+            const formData = new FormData(document.getElementById('avatarForm'));
+            
+            fetch("{% url 'avatar_upload' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    statusElement.textContent = 'Avatar updated successfully!';
+                    statusElement.style.color = 'var(--success-color)';
+                } else {
+                    throw new Error(data.error || 'Failed to update avatar');
+                }
+            })
+            .catch(error => {
+                statusElement.textContent = error.message;
+                statusElement.style.color = 'var(--error-color)';
+            })
+            .finally(() => {
+                // Remove loading animation
+                avatarContainer.classList.remove('pulse');
+                
+                setTimeout(() => {
+                    statusElement.style.opacity = '0';
+                    setTimeout(() => {
+                        statusElement.textContent = '';
+                        statusElement.style.opacity = '1';
+                    }, 300);
+                }, 3000);
+            });
         }
-
-        // Submit form
-        const formData = new FormData(form);
-        
-        fetch("{% url 'avatar_upload' %}", {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                messages.textContent = 'Avatar updated successfully!';
-                messages.classList.remove('text-red-500');
-                messages.classList.add('text-green-500');
-            } else {
-                throw new Error(data.error || 'Failed to update avatar');
-            }
-        })
-        .catch(error => {
-            messages.textContent = error.message;
-            messages.classList.remove('text-green-500');
-            messages.classList.add('text-red-500');
-        })
-        .finally(() => {
-            loading.classList.add('hidden');
-            setTimeout(() => {
-                messages.textContent = '';
-            }, 3000);
-        });
     });
+    
+    // Form Submissions with AJAX and Animations
+    function setupFormSubmission(formId, notificationId, successMessage) {
+        const form = document.getElementById(formId);
+        const notification = document.getElementById(notificationId);
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Add loading state to button
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Saving...';
+            submitBtn.disabled = true;
+            
+            // Show loading in notification
+            notification.textContent = 'Saving changes...';
+            notification.className = 'notification';
+            notification.style.display = 'block';
+            
+            // Submit form via AJAX
+            const formData = new FormData(form);
+            
+            fetch(form.action || window.location.href, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    notification.textContent = successMessage || 'Changes saved successfully!';
+                    notification.className = 'notification success';
+                } else {
+                    throw new Error(data.error || 'Failed to save changes');
+                }
+            })
+            .catch(error => {
+                notification.textContent = error.message;
+                notification.className = 'notification error';
+            })
+            .finally(() => {
+                // Restore button state
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+                
+                // Hide notification with animation
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                        notification.style.opacity = '1';
+                        notification.style.transform = 'translateY(0)';
+                    }, 300);
+                }, 3000);
+            });
+        });
+    }
+    
+    // Setup form submissions
+    setupFormSubmission('generalForm', 'generalNotification', 'Profile updated successfully!');
+    setupFormSubmission('socialForm', 'socialNotification', 'Social links updated successfully!');
+    setupFormSubmission('securityForm', 'securityNotification', 'Password changed successfully!');
+    
+    // Password Strength Meter with Animation
+    document.getElementById('new_password1')?.addEventListener('input', function() {
+        const password = this.value;
+        const strengthBar = document.getElementById('passwordStrengthBar');
+        const strengthText = document.getElementById('passwordStrengthText');
+        
+        // Calculate password strength
+        let strength = 0;
+        if (password.length >= 8) strength += 25;
+        if (password.match(/[a-z]+/)) strength += 25;
+        if (password.match(/[A-Z]+/)) strength += 25;
+        if (password.match(/[0-9]+/)) strength += 25;
+        
+        // Update strength bar with animation
+        strengthBar.style.width = strength + '%';
+        
+        // Set color based on strength with smooth transition
+        if (strength < 25) {
+            strengthBar.style.backgroundColor = '#F44336';
+            strengthText.textContent = 'Very Weak';
+            strengthText.style.color = '#F44336';
+        } else if (strength < 50) {
+            strengthBar.style.backgroundColor = '#FF9800';
+            strengthText.textContent = 'Weak';
+            strengthText.style.color = '#FF9800';
+        } else if (strength < 75) {
+            strengthBar.style.backgroundColor = '#FFC107';
+            strengthText.textContent = 'Medium';
+            strengthText.style.color = '#FFC107';
+        } else {
+            strengthBar.style.backgroundColor = '#4CAF50';
+            strengthText.textContent = 'Strong';
+            strengthText.style.color = '#4CAF50';
+        }
+    });
+    
+    // Form validation for password matching with visual feedback
+    document.getElementById('securityForm')?.addEventListener('submit', function(e) {
+        const password1 = document.getElementById('new_password1').value;
+        const password2 = document.getElementById('new_password2').value;
+        const notification = document.getElementById('securityNotification');
+        const confirmInput = document.getElementById('new_password2');
+        
+        if (password1 !== password2) {
+            e.preventDefault();
+            notification.textContent = 'Passwords do not match!';
+            notification.className = 'notification error';
+            notification.style.display = 'block';
+            
+            // Add shake animation to confirm password field
+            confirmInput.classList.add('shake');
+            confirmInput.style.borderColor = 'var(--error-color)';
+            
+            setTimeout(() => {
+                confirmInput.classList.remove('shake');
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                        notification.style.opacity = '1';
+                        notification.style.transform = 'translateY(0)';
+                    }, 300);
+                }, 3000);
+            }, 500);
+        }
+    });
+
+    // Add keyframe animation for shake effect
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+    `;
+    document.head.appendChild(style);
 </script>
 {% endblock %}

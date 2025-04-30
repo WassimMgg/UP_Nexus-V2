@@ -10,6 +10,18 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'phone_number' ]
+        
+        widgets = {
+            'phone_number': forms.TextInput(attrs={'pattern': '[0-9]{10}'}),
+            'website': forms.URLInput(attrs={'placeholder': 'https://example.com'}),
+            'linkedin_link': forms.URLInput(attrs={'placeholder': 'https://linkedin.com/in/username'}),
+            'facebook_link': forms.URLInput(attrs={'placeholder': 'https://facebook.com/username'}),
+            'instagram_link': forms.URLInput(attrs={'placeholder': 'https://instagram.com/username'}),
+            'bio': forms.Textarea(attrs={'placeholder': 'Tell us about yourself'}),
+        }
+
+        
+    
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -29,6 +41,25 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ['username', 'email']
 
+class ProfileUpdate(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = [
+            'image',
+            'phone_number',
+            'website',
+            'bio',
+            'linkedin_link',
+            'facebook_link',
+            'instagram_link',
+        ]
+        widgets = {
+            'phone_number': forms.TextInput(attrs={'pattern': '[0-9]{10}'}),
+            'website': forms.URLInput(attrs={'placeholder': 'https://example.com'}),
+            'linkedin_link': forms.URLInput(attrs={'placeholder': 'https://linkedin.com/in/username'}),
+            'facebook_link': forms.URLInput(attrs={'placeholder': 'https://facebook.com/username'}),
+            'instagram_link': forms.URLInput(attrs={'placeholder': 'https://instagram.com/username'}),
+        }
 
 
 class StartupVerificationForm(forms.ModelForm):

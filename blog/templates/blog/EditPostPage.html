@@ -1,118 +1,522 @@
-{% extends "blog/base/base.html" %} {% load static %} {% block content %}
-<article class="media content-section">
-  <div class="media-body">
-   
+{% extends "blog/base/base.html" %}
+{% load static %}
+{% block content %}
 
-    <!-- Event editing form -->
-    <!-- The form posts to the same URL by default. You can also set action="{% url 'post-update' post.id %}" -->
-    <form class="event-form" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <h1 class="article-title">Edit Event</h1>
-      <!-- Title Input -->
-      <div class="form-group">
-        <label for="title" class="form-label">Title</label>
-        <input
-          id="title"
-          name="title"
-          type="text"
-          class="form-control"
-          placeholder="Enter the title"
-          value="{{ post.title }}"
-          required
-        />
-      </div>
+<style>
+  .edit-post-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.6s ease-out;
+  }
 
-      <!-- Location Input -->
-      <div class="form-group">
-        <label for="location" class="form-label">Location</label>
-        <input
-          id="location"
-          name="location"
-          type="text"
-          class="form-control"
-          placeholder="Enter the location"
-          value="{{ post.location }}"
-          required
-        />
-      </div>
+  .event-form{
+    max-width: 650px;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .article-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
+    padding-bottom: 0.75rem;
+  }
+  
+  .article-title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background-color: #ffd502;
+    border-radius: 2px;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+    animation: slideUp 0.5s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  @keyframes slideUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .form-group:nth-child(2) { animation-delay: 0.1s; }
+  .form-group:nth-child(3) { animation-delay: 0.2s; }
+  .form-group:nth-child(4) { animation-delay: 0.3s; }
+  .form-group:nth-child(5) { animation-delay: 0.4s; }
+  .form-group:nth-child(6) { animation-delay: 0.5s; }
+  
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #4a5568;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .form-control:focus {
+    border-color: #ffd502;
+    box-shadow: 0 0 0 3px rgba(255, 213, 2, 0.2);
+    outline: none;
+  }
+  
+  .errorlist {
+    color: #e53e3e;
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .preview-section {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+  }
+  
+  .image-preview-wrapper {
+    flex: 0 0 200px;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .current-image-preview {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 2px solid #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .current-image-preview:hover {
+    transform: scale(1.02);
+  }
+  
+  .image-container {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+  
+  .image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 0.5rem;
+    text-align: center;
+    border-radius: 0 0 0.5rem 0.5rem;
+  }
+  
+  .overlay-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .upload-area {
+    flex: 1;
+    border: 2px dashed #d1d5db;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    background: #f8fafc;
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+  
+  .upload-area.full-width {
+    width: 100%;
+  }
+  
+  .upload-area.dragover {
+    border-color: #ffd502;
+    background-color: rgba(255, 213, 2, 0.05);
+  }
+  
+  .upload-icon {
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .upload-area:hover .upload-icon {
+    transform: translateY(-5px);
+  }
+  
+  .upload-svg {
+    width: 48px;
+    height: 48px;
+    fill: #ffd502;
+    margin: auto;
+    margin-bottom: 1rem;
+  }
+  
+  .upload-meta {
+    text-align: center;
+  }
+  
+  .upload-instruction {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #1e293b;
+  }
+  
+  .drag-text, .browse-text {
+    font-weight: 500;
+    color: #ffd502;
+  }
+  
+  .or-text {
+    margin: 0 0.5rem;
+    color: #64748b;
+  }
+  
+  .supported-formats {
+    color: #64748b;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+  
+  .file-name-display {
+    margin-top: 1rem;
+    color: #10b981;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  .preview-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #64748b;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  .form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .EditPage-Button {
+    position: relative;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #ffd502;
+    color: #1a202c;
+    border: none;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .EditPage-Button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(255, 213, 2, 0.3);
+  }
+  
+  .EditPage-Button:active {
+    transform: translateY(-1px);
+  }
+  
+  .EditPage-Button span {
+    position: absolute;
+    background: #fff;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    border-radius: 50%;
+    animation: ripple 1s linear infinite;
+    opacity: 0;
+  }
+  
+  @keyframes ripple {
+    0% {
+      width: 0;
+      height: 0;
+      opacity: 0.5;
+    }
+    100% {
+      width: 500px;
+      height: 500px;
+      opacity: 0;
+    }
+  }
+  
+  .cancel-btn {
+    background-color: white;
+    border: 2px solid #e2e8f0;
+    color: #4a5568;
+  }
+  
+  .cancel-btn:hover {
+    border-color: #ffd502;
+    color: #ffd502;
+  }
+  
+  @media (max-width: 768px) {
+    .preview-section {
+      flex-direction: column;
+    }
+    
+    .image-preview-wrapper {
+      width: 100%;
+      flex: none;
+    }
+    
+    .current-image-preview {
+      height: auto;
+      max-height: 300px;
+    }
+    
+    .form-buttons {
+      flex-direction: column;
+    }
+  }
+</style>
 
-      <!-- Date Input -->
-      <div class="form-group">
-        <label for="date" class="form-label">Date</label>
-        <input
-          id="date"
-          name="event_date"
-          type="date"
-          class="form-control"
-          value="{{ post.event_date|date:'Y-m-d' }}"
-          required
-        />
-      </div>
+<div class="edit-post-container">
+  <form class="event-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h1 class="article-title">Edit Event</h1>
+    
+    <!-- Title Input -->
+    <div class="form-group">
+      <label for="{{ form.title.id_for_label }}">Title</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        name="{{ form.title.name }}" 
+        id="{{ form.title.id_for_label }}" 
+        value="{{ form.title.value|default_if_none:'' }}"
+        required
+      >
+      {{ form.title.errors }}
+    </div>
 
-      <!-- Body Textarea -->
-      <div class="form-group">
-        <label for="body" class="form-label">Body</label>
-        <textarea
-          id="body"
-          name="content"
-          class="form-control"
-          rows="6"
-          placeholder="Enter your description"
-          required
-        >
-{{ post.content }}</textarea
-        >
-      </div>
+    <!-- Location Input -->
+    <div class="form-group">
+      <label for="{{ form.location.id_for_label }}">Location</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        name="{{ form.location.name }}" 
+        id="{{ form.location.id_for_label }}" 
+        value="{{ form.location.value|default_if_none:'' }}"
+        required
+      >
+      {{ form.location.errors }}
+    </div>
 
-      <!-- File Upload -->
-      <div class="form-group">
-        <div class="file-upload-container">
-            <input class="input-image" name="image" id="file" type="file" accept="image/*" hidden />
-            
+    <!-- Date Inputs -->
+    <div class="form-group">
+      <label for="{{ form.event_date.id_for_label }}">Start Date</label>
+      <input 
+        type="datetime-local" 
+        class="form-control" 
+        name="{{ form.event_date.name }}" 
+        id="{{ form.event_date.id_for_label }}" 
+        value="{{ form.event_date.value|date:'Y-m-d\TH:i' }}"
+        required
+      >
+      {{ form.event_date.errors }}
+    </div>
+    
+    <div class="form-group">
+      <label for="{{ form.event_end_date.id_for_label }}">End Date</label>
+      <input 
+        type="datetime-local" 
+        class="form-control" 
+        name="{{ form.event_end_date.name }}" 
+        id="{{ form.event_end_date.id_for_label }}" 
+        value="{{ form.event_end_date.value|date:'Y-m-d\TH:i' }}"
+        required
+      >
+      {{ form.event_end_date.errors }}
+    </div>
+    
+    <!-- Content Input -->
+    <div class="form-group">
+      <label for="{{ form.content.id_for_label }}">Description</label>
+      <textarea 
+        class="form-control" 
+        name="{{ form.content.name }}" 
+        id="{{ form.content.id_for_label }}" 
+        rows="6"
+        required
+      >{{ form.content.value|default_if_none:'' }}</textarea>
+      {{ form.content.errors }}
+    </div>
+
+    <!-- Image Upload -->
+    <div class="form-group">
+      <label>Event Image</label>
+      <div class="file-upload-container">
+        <!-- Current Image Preview -->
+        <div class="preview-section">
+          {% if form.instance.image %}
+          <div class="image-preview-wrapper">
+            <small class="preview-label">Current Image</small>
+            <div class="image-container">
+              <img src="{{ form.instance.image.url }}" alt="Current upload" class="current-image-preview">
+              <div class="image-overlay">
+                <span class="overlay-text">Existing Image</span>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Upload Area -->
+          <div class="upload-area {% if not form.instance.image %}full-width{% endif %}" id="upload-area">
+            <input class="input-image" name="{{ form.image.name }}" id="file" type="file" accept="image/*" hidden>
             <label for="file" class="custom-file-upload">
-                <div class="upload-icon">
-                    <svg xml:space="preserve" viewBox="0 0 184.69 184.69" xmlns:xlink="http://www.w3.org/1999/xlink"
-                         xmlns="http://www.w3.org/2000/svg" id="Capa_1" version="1.1" width="60px" height="60px">
-                        <g>
-                            <g>
-                                <path d="M149.968,50.186c-8.017-14.308-23.796-22.515-40.717-19.813
-                              C102.609,16.43,88.713,7.576,73.087,7.576c-22.117,0-40.112,17.994-40.112,40.115c0,0.913,0.036,1.854,0.118,2.834
-                              C14.004,54.875,0,72.11,0,91.959c0,23.456,19.082,42.535,42.538,42.535h33.623v-7.025H42.538
-                              c-19.583,0-35.509-15.929-35.509-35.509c0-17.526,13.084-32.621,30.442-35.105c0.931-0.132,1.768-0.633,2.326-1.392
-                              c0.555-0.755,0.795-1.704,0.644-2.63c-0.297-1.904-0.447-3.582-0.447-5.139c0-18.249,14.852-33.094,33.094-33.094
-                              c13.703,0,25.789,8.26,30.803,21.04c0.63,1.621,2.351,2.534,4.058,2.14c15.425-3.568,29.919,3.883,36.604,17.168
-                              c0.508,1.027,1.503,1.736,2.641,1.897c17.368,2.473,30.481,17.569,30.481,35.112c0,19.58-15.937,35.509-35.52,35.509H97.391
-                              v7.025h44.761c23.459,0,42.538-19.079,42.538-42.535C184.69,71.545,169.884,53.901,149.968,50.186z"
-                                      style="fill: #010002"></path>
-                                <path d="M108.586,90.201c1.406-1.403,1.406-3.672,0-5.075L88.541,65.078
-                              c-0.701-0.698-1.614-1.045-2.534-1.045l-0.064,0.011c-0.018,0-0.036-0.011-0.054-0.011c-0.931,0-1.85,0.361-2.534,1.045
-                              L63.31,85.127c-1.403,1.403-1.403,3.672,0,5.075c1.403,1.406,3.672,1.406,5.075,0L82.296,76.29v97.227
-                              c0,1.99,1.603,3.597,3.593,3.597c1.979,0,3.59-1.607,3.59-3.597V76.165l14.033,14.036
-                              C104.91,91.608,107.183,91.608,108.586,90.201z"
-                                      style="fill: #010002"></path>
-                            </g>
-                        </g>
-                    </svg>
-                </div>
-                <p>Drag & drop your file here or <span class="upload-text">click to upload</span></p>
+              <div class="upload-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="upload-svg">
+                  <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
+                </svg>
+              </div>
+              <div class="upload-meta">
+                <p class="upload-instruction">
+                  <span class="drag-text">Drag & drop new image</span>
+                  <span class="or-text">or</span>
+                  <span class="browse-text">Browse files</span>
+                </p>
+                <small class="supported-formats">Supports: JPG, PNG, WEBP (Max 5MB)</small>
+              </div>
+              <div class="file-name-display" id="file-name-display"></div>
             </label>
-        
-          
+            {{ form.image.errors }}
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- Buttons -->
-      <div class="form-buttons mt-3">
-        <button type="submit" class="EditPage-Button">
-          Update Post
-          <span></span>
-        </button>
-        <button class="EditPage-Button">
-          <a href="{% url 'post-detail' post.id %} ">Discard</a>
-          <span></span>
-        </button>
-      </div>
-    </form>
-  </div>
-</article>
+    <!-- Form Buttons -->
+    <div class="form-buttons">
+      <button type="submit" class="EditPage-Button" id="update-btn">
+        Update Event
+      </button>
+      <a href="{% url 'post-detail' post.id %}" class="EditPage-Button cancel-btn">
+        Discard
+      </a>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // File upload handling
+    const fileInput = document.getElementById('file');
+    const uploadArea = document.getElementById('upload-area');
+    const fileNameDisplay = document.getElementById('file-name-display');
+    const updateBtn = document.getElementById('update-btn');
+    
+    // Drag and drop handlers
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      fileInput.files = e.dataTransfer.files;
+      updateFileNameDisplay();
+    });
+    
+    // File input change handler
+    fileInput.addEventListener('change', updateFileNameDisplay);
+    
+    function updateFileNameDisplay() {
+      if (fileInput.files.length > 0) {
+        const fileName = fileInput.files[0].name;
+        fileNameDisplay.textContent = `Selected file: ${fileName}`;
+        fileNameDisplay.style.display = 'block';
+        
+        // Add success styling
+        uploadArea.style.borderColor = '#10b981';
+        uploadArea.style.backgroundColor = 'rgba(16, 185, 129, 0.05)';
+        
+        // Add pulse animation to update button
+        updateBtn.classList.add('pulse');
+      }
+    }
+    
+    // Date validation
+    const startDateInput = document.getElementById('{{ form.event_date.id_for_label }}');
+    const endDateInput = document.getElementById('{{ form.event_end_date.id_for_label }}');
+    
+    startDateInput.addEventListener('change', function() {
+      if (this.value && endDateInput.value) {
+        if (new Date(this.value) > new Date(endDateInput.value)) {
+          endDateInput.value = this.value;
+        }
+      }
+    });
+    
+    endDateInput.addEventListener('change', function() {
+      if (startDateInput.value && this.value) {
+        if (new Date(this.value) < new Date(startDateInput.value)) {
+          alert('End date must be after start date');
+          this.value = startDateInput.value;
+        }
+      }
+    });
+    
+    // Button ripple effect
+    const buttons = document.querySelectorAll('.EditPage-Button');
+    
+    buttons.forEach(button => {
+      button.addEventListener('click', function(e) {
+        const x = e.clientX - e.target.getBoundingClientRect().left;
+        const y = e.clientY - e.target.getBoundingClientRect().top;
+        
+        const ripple = document.createElement('span');
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 1000);
+      });
+    });
+  });
+</script>
 {% endblock content %}

@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import JSONField
-# from PIL import Image
+from PIL import Image
 
 class Profile(models.Model):
     ROLE_CHOICES = [
@@ -18,12 +18,13 @@ class Profile(models.Model):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES,default="User" ,  blank=True, null=True)
     pending_role = models.CharField(max_length=20, choices=ROLE_CHOICES, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True, default="10-digit phone number")
     city  = models.CharField(max_length=50, blank=True, null=True)
-    website = models.URLField(blank=True, null=True)
-    facebook_link = models.URLField(blank=True, null=True)
-    instagram_link = models.URLField(blank=True, null=True)
-    linkedin_link = models.URLField(blank=True, null=True)
+    website = models.URLField(blank=True, null=True , default="https://example.com")
+    bio = models.TextField(blank=True, null=True)
+    facebook_link = models.URLField(blank=True, null=True , default="https://facebook.com")
+    instagram_link = models.URLField(blank=True, null=True , default="https://instagram.com")
+    linkedin_link = models.URLField(blank=True, null=True , default="https://linkedin.com")
     services = models.CharField(max_length=100, blank=True, null=True)
     # Role-specific fields
     # Startup

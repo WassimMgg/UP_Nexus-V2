@@ -1,0 +1,436 @@
+{% extends 'blog/base/base.html' %}
+{% load static %}
+
+{% block css_site %}
+    <link rel="stylesheet" href="{% static 'news/news_style.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container mx-auto px-4 py-8 max-w-3xl">
+    <div class="mb-6">
+        <a href="{% url 'news' %}" class="inline-flex items-center text-[#9b87f5] hover:text-[#8069e6] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to News
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-lg">
+        <div class="p-8">
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">
+                {% if form.instance.id %}Edit{% else %}Add{% endif %} Article
+            </h2>
+            
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Enhanced Image Field -->
+<div class="space-y-3">
+    <label class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+        {{ form.image.label }}
+        <span class="text-xs font-normal text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">Optional</span>
+    </label>
+    
+    <div class="image-upload-container">
+        <!-- Hidden file input -->
+        <div class="hidden">
+            {{ form.image }}
+        </div>
+        
+        <!-- Drag & Drop Area -->
+        <div id="dropzone" class="relative group cursor-pointer transition-all duration-300 
+            border-2 border-dashed rounded-xl p-6
+            {% if form.instance.image %}border-[#9b87f5] bg-[#9b87f5]/5{% else %}border-gray-300 hover:border-[#9b87f5] hover:bg-[#9b87f5]/5{% endif %}">
+            
+            <div class="flex flex-col items-center justify-center gap-3 text-center">
+                <!-- Upload Icon -->
+                <div class="w-16 h-16 rounded-full bg-[#9b87f5]/10 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-[#9b87f5]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                
+                <!-- Current Image Preview (if exists) -->
+                {% if form.instance.image %}
+                <div id="image-preview" class="w-full max-w-xs mx-auto mb-4 relative group/preview">
+                    <img src="{{ form.instance.image.url }}" alt="Current image" class="w-full h-auto max-h-48 object-contain rounded-lg shadow-md">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover/preview:bg-opacity-40 flex items-center justify-center transition-all duration-300 rounded-lg">
+                        <div class="flex gap-2 opacity-0 group-hover/preview:opacity-100 transition-opacity">
+                            <button type="button" id="change-image-btn" class="bg-white text-gray-800 p-2 rounded-full hover:bg-[#9b87f5] hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                            </button>
+                            <button type="button" id="remove-image-btn" class="bg-white text-red-500 p-2 rounded-full hover:bg-red-500 hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <p id="current-file-name" class="text-sm font-medium text-[#9b87f5]">{{ form.instance.image.name }}</p>
+                {% else %}
+                <!-- Upload Instructions -->
+                <div class="space-y-2">
+                    <h4 class="text-base font-medium text-gray-700">Upload an image</h4>
+                    <p class="text-sm text-gray-500">Drag and drop an image here or click to browse</p>
+                    <div class="flex flex-wrap justify-center gap-1 text-xs text-gray-500">
+                        <span class="px-2 py-1 bg-gray-100 rounded-full">PNG</span>
+                        <span class="px-2 py-1 bg-gray-100 rounded-full">JPG</span>
+                        <span class="px-2 py-1 bg-gray-100 rounded-full">GIF</span>
+                        <span class="px-2 py-1 bg-gray-100 rounded-full">Max 10MB</span>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Upload Progress (Hidden by default) -->
+                <div id="upload-progress" class="w-full max-w-xs hidden">
+                    <div class="flex items-center gap-2 mb-1">
+                        <svg class="animate-spin h-4 w-4 text-[#9b87f5]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span class="text-sm text-gray-700">Uploading...</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="progress-bar" class="bg-[#9b87f5] h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- New File Name Display -->
+            <div id="file-name-container" class="mt-3 text-center hidden">
+                <div class="flex items-center justify-center gap-2 text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span id="file-name" class="font-medium text-gray-700"></span>
+                    <button type="button" id="clear-file" class="text-gray-400 hover:text-red-500 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Error Message Area -->
+    <div id="image-error" class="text-red-500 text-sm hidden">
+        Please upload a valid image file (PNG, JPG, GIF) under 10MB.
+    </div>
+    
+    <!-- Help Text -->
+    <p class="text-xs text-gray-500">
+        Recommended image size: 1200×630 pixels for optimal display
+    </p>
+</div>
+                
+                <!-- Title field -->
+                <div class="space-y-2">
+                    <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.title.label }}</label>
+                    <input type="text" 
+                           name="{{ form.title.name }}" 
+                           id="{{ form.title.id_for_label }}" 
+                           value="{{ form.title.value|default:'' }}"
+                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#9b87f5] focus:border-transparent transition-all duration-200">
+                    {% if form.title.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.title.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Category field -->
+                <div class="space-y-2">
+                    <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.category.label }}</label>
+                    <select name="{{ form.category.name }}" 
+                            id="{{ form.category.id_for_label }}" 
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#9b87f5] focus:border-transparent transition-all duration-200">
+                        {% for value, label in form.category.field.choices %}
+                        <option value="{{ value }}" {% if form.category.value == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if form.category.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.category.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Summary field -->
+                <div class="space-y-2">
+                    <label for="{{ form.summary.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.summary.label }}</label>
+                    <textarea name="{{ form.summary.name }}" 
+                              id="{{ form.summary.id_for_label }}" 
+                              class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#9b87f5] focus:border-transparent transition-all duration-200"
+                              rows="3">{{ form.summary.value|default:'' }}</textarea>
+                    <div class="flex justify-between">
+                        <p class="text-xs text-gray-500">Brief description of the article</p>
+                        <p class="text-xs text-gray-500"><span id="summary-count">0</span>/200 characters</p>
+                    </div>
+                    {% if form.summary.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.summary.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Content field -->
+                <div class="space-y-2">
+                    <label for="{{ form.content.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.content.label }}</label>
+                    <textarea name="{{ form.content.name }}" 
+                             id="{{ form.content.id_for_label }}" 
+                             class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#9b87f5] focus:border-transparent transition-all duration-200 min-h-[200px]"
+                             rows="8">{{ form.content.value|default:'' }}</textarea>
+                    {% if form.content.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.content.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="flex justify-end space-x-3 pt-4">
+                    <a href="{% url 'news' %}" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        Cancel
+                    </a>
+                    <button type="submit" class="bg-[#9b87f5] text-white px-6 py-3 rounded-lg hover:bg-[#8069e6] transition-all duration-300 transform hover:-translate-y-1 shadow-md hover:shadow-lg flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Save Article
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('{{ form.image.id_for_label }}');
+        const fileNameContainer = document.getElementById('file-name-container');
+        const fileNameDisplay = document.getElementById('file-name');
+        const clearFileBtn = document.getElementById('clear-file');
+        const removeImageBtn = document.getElementById('remove-image-btn');
+        const changeImageBtn = document.getElementById('change-image-btn');
+        const uploadProgress = document.getElementById('upload-progress');
+        const progressBar = document.getElementById('progress-bar');
+        const imageError = document.getElementById('image-error');
+        
+        // Make the entire dropzone clickable
+        if (dropzone && fileInput) {
+            dropzone.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Prevent default drag behaviors
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            // Highlight dropzone when item is dragged over it
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, unhighlight, false);
+            });
+            
+            // Handle dropped files
+            dropzone.addEventListener('drop', handleDrop, false);
+            
+            // Handle file input change
+            fileInput.addEventListener('change', handleFiles, false);
+            
+            // Handle clear file button
+            if (clearFileBtn) {
+                clearFileBtn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent triggering dropzone click
+                    clearFileSelection();
+                });
+            }
+            
+            // Handle remove image button
+            if (removeImageBtn) {
+                removeImageBtn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent triggering dropzone click
+                    
+                    // Create a hidden input to clear the image
+                    const clearInput = document.createElement('input');
+                    clearInput.type = 'hidden';
+                    clearInput.name = 'image-clear';
+                    clearInput.value = 'on';
+                    document.querySelector('form').appendChild(clearInput);
+                    
+                    // Update UI
+                    const imagePreview = document.getElementById('image-preview');
+                    const currentFileName = document.getElementById('current-file-name');
+                    
+                    if (imagePreview) imagePreview.style.display = 'none';
+                    if (currentFileName) currentFileName.textContent = 'Image will be removed upon save';
+                    if (currentFileName) currentFileName.className = 'text-sm font-medium text-red-500';
+                    
+                    // Change dropzone appearance
+                    dropzone.classList.remove('border-[#9b87f5]', 'bg-[#9b87f5]/5');
+                    dropzone.classList.add('border-red-300', 'bg-red-50');
+                });
+            }
+            
+            // Handle change image button
+            if (changeImageBtn) {
+                changeImageBtn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent triggering dropzone click
+                    fileInput.click();
+                });
+            }
+        }
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        function highlight() {
+            dropzone.classList.add('border-[#9b87f5]', 'bg-[#9b87f5]/5');
+        }
+        
+        function unhighlight() {
+            if (!fileInput.files.length) {
+                dropzone.classList.remove('border-[#9b87f5]', 'bg-[#9b87f5]/5');
+            }
+        }
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            if (files.length) {
+                fileInput.files = files;
+                handleFiles();
+            }
+        }
+        
+        function handleFiles() {
+            const files = fileInput.files;
+            
+            if (files.length) {
+                const file = files[0];
+                
+                // Validate file type and size
+                const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                const maxSize = 10 * 1024 * 1024; // 10MB
+                
+                if (!validTypes.includes(file.type) || file.size > maxSize) {
+                    imageError.classList.remove('hidden');
+                    return;
+                } else {
+                    imageError.classList.add('hidden');
+                }
+                
+                // Show file name
+                fileNameContainer.classList.remove('hidden');
+                fileNameDisplay.textContent = file.name;
+                
+                // Simulate upload progress
+                simulateUpload();
+                
+                // Create image preview
+                createImagePreview(file);
+                
+                // Update dropzone appearance
+                dropzone.classList.add('border-[#9b87f5]', 'bg-[#9b87f5]/5');
+            }
+        }
+        
+        function clearFileSelection() {
+            fileInput.value = '';
+            fileNameContainer.classList.add('hidden');
+            dropzone.classList.remove('border-[#9b87f5]', 'bg-[#9b87f5]/5');
+            
+            // Remove any existing preview
+            const existingPreview = document.getElementById('new-image-preview');
+            if (existingPreview) {
+                existingPreview.remove();
+            }
+        }
+        
+        function createImagePreview(file) {
+            // Remove any existing new preview
+            const existingPreview = document.getElementById('new-image-preview');
+            if (existingPreview) {
+                existingPreview.remove();
+            }
+            
+            // Create new preview container
+            const previewContainer = document.createElement('div');
+            previewContainer.id = 'new-image-preview';
+            previewContainer.className = 'w-full max-w-xs mx-auto mb-4 mt-4';
+            
+            // Create image element
+            const img = document.createElement('img');
+            img.className = 'w-full h-auto max-h-48 object-contain rounded-lg shadow-md';
+            img.alt = 'Image preview';
+            
+            // Read the file and set the image source
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            
+            // Add image to container
+            previewContainer.appendChild(img);
+            
+            // Add preview before the file name container
+            fileNameContainer.parentNode.insertBefore(previewContainer, fileNameContainer);
+            
+            // Hide the original preview if it exists
+            const originalPreview = document.getElementById('image-preview');
+            const currentFileName = document.getElementById('current-file-name');
+            if (originalPreview) originalPreview.style.display = 'none';
+            if (currentFileName) currentFileName.style.display = 'none';
+        }
+        
+        function simulateUpload() {
+            uploadProgress.classList.remove('hidden');
+            let progress = 0;
+            
+            const interval = setInterval(() => {
+                progress += 5;
+                progressBar.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        uploadProgress.classList.add('hidden');
+                    }, 500);
+                }
+            }, 50);
+        }
+    });
+</script>
+
+<style>
+    /* Custom animation for drag and drop */
+    @keyframes pulse-border {
+        0% { box-shadow: 0 0 0 0 rgba(155, 135, 245, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(155, 135, 245, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(155, 135, 245, 0); }
+    }
+    
+    #dropzone:hover {
+        animation: pulse-border 2s infinite;
+    }
+    
+    /* Hide the default file input */
+    input[type="file"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
+</style>
+{% endblock %}

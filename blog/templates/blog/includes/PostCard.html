@@ -1,33 +1,222 @@
+<style>
+  .post-card {
+    background-color: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .post-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  .post-card-header {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+  }
+  
+  .post-card-header img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .post-card:hover .post-card-header img {
+    transform: scale(1.05);
+  }
+  
+  .post-card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  
+  .post-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #1a202c;
+    transition: color 0.3s ease;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .post-card-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  .post-card:hover .post-card-title {
+    color: #ffd502;
+  }
+  
+  .post-card-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    color: #4a5568;
+    font-size: 0.875rem;
+  }
+  
+  .post-card-info i {
+    color: #ffd502;
+    margin-right: 0.5rem;
+    width: 16px;
+    text-align: center;
+  }
+  
+  .post-card-dates {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .post-card-dates span:first-child::after {
+    content: "→";
+    margin-left: 0.5rem;
+    color: #cbd5e0;
+  }
+  
+  .post-card-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+  }
+  
+  .profile-card {
+    display: flex;
+    align-items: center;
+  }
+  
+  .profile-card img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffd502;
+    transition: transform 0.3s ease;
+  }
+  
+  .post-card:hover .profile-card img {
+    transform: scale(1.1);
+  }
+  
+  .profile-card-name {
+    margin-left: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .profile-card-name a {
+    color: #4a5568;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .profile-card-name a:hover {
+    color: #ffd502;
+  }
+  
+  .btn {
+    background-color: #ffd502;
+    color: #1a202c;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+  
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(255, 213, 2, 0.3);
+  }
+  
+  .btn:active {
+    transform: translateY(-1px);
+  }
+  
+  /* Badge for upcoming events */
+  .event-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: rgba(255, 213, 2, 0.9);
+    color: #1a202c;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+</style>
 
-    <div class="card">
-      <div class="card-header">
-        <img src="{{post.image.url}}" alt="Post Picture" />
-      </div>
-      <div class="card-body">
-        <h2>
-          <a href="{% url 'post-detail' post.id %}">{{ post.title }}</a>
-        </h2>
-        <div>
-          <i class="fa-solid fa-calendar-days"></i> <span>{{ post.event_date  }}  </span>       
-        </div>
-        <div>
-          <i class="fa-solid fa-location-dot"></i> <span> {{ post.location }} </span>   
-        </div>
-        <div class="card-user">
-          <div class="profile-card">
-            <a href="{% url 'public-profile' post.author.username %}">
-            <img src="{{ post.author.profile.image.url }}" alt="user" />
-          </a>
-          <div class="profile-card-name">
-            <a href="{% url 'public-profile' post.author.username %}">{{ post.author }}</a>
-          </div>
-          </div>
-         
-         
-          <div>
-            <a href="{% url 'post-detail' post.id %}"  class="btn" >Read More</a>
-          </div>
-        </div>
-        
+<div class="post-card" data-date="{{ post.event_date|date:'Y-m-d' }}">
+  <div class="post-card-header">
+    <img src="{{post.image.url}}" alt="{{ post.title }}" />
+    
+    <!-- Event badge - you can conditionally show this based on event date -->
+    <!-- {% if post.event_date|date:'Y-m-d' >= now|date:'Y-m-d' %}
+    <div class="event-badge">Upcoming</div>
+    {% endif %} -->
+  </div>
+  
+  <div class="post-card-body">
+    <h2 class="post-card-title">
+      <a href="{% url 'post-detail' post.id %}">{{ post.title }}</a>
+    </h2>
+    
+    <div class="post-card-info">
+      <i class="fa-solid fa-calendar-days"></i>
+      <div class="post-card-dates">
+        <span>{{ post.event_date|date:"M d, Y" }}</span>
+        <span>{{ post.event_end_date|date:"M d, Y" }}</span>
       </div>
     </div>
+    
+    <div class="post-card-info">
+      <i class="fa-solid fa-location-dot"></i>
+      <span>{{ post.location }}</span>
+    </div>
+    
+    <div class="post-card-user">
+      <div class="profile-card">
+        <a href="{% url 'public-profile' post.author.username %}">
+          <img src="{{ post.author.profile.image.url }}" alt="{{ post.author.username }}" />
+        </a>
+        <div class="profile-card-name">
+          <a href="{% url 'public-profile' post.author.username %}">{{ post.author }}</a>
+        </div>
+      </div>
+      
+      <div>
+        <a href="{% url 'post-detail' post.id %}" class="btn">
+          Read More
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

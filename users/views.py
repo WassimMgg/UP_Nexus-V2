@@ -13,7 +13,8 @@ from .forms import (
     IncubatorVerificationForm,
     AcceleratorVerificationForm,
     InvestorVerificationForm,
-    ProjectHolderVerificationForm
+    ProjectHolderVerificationForm, 
+    ProfileUpdate
 )
 from django.http import HttpResponseRedirect
 from .models import  RoleRequest, Profile 
@@ -21,6 +22,7 @@ from django.contrib.auth.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
 from django.http import JsonResponse
 from blog.models import Post    
+from django.views.decorators.http import require_http_methods
 
 def login_view(request):
     if request.method == 'POST':
@@ -120,28 +122,95 @@ def role_specific_verification(request, role):
     return render(request, f'users/role_verification.html', {'form': form, 'role': role})
 
 @login_required
+@require_http_methods(["GET", "POST"])
 def profile(request):
-    if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=request.user)
-        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
-        request.user.profile.linkedin = request.POST.get('linkedin')
-        request.user.profile.facebook = request.POST.get('facebook')
-        request.user.profile.instagram = request.POST.get('instagram')
-        request.user.profile.save()
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
-            messages.success(request, 'Your profile has been updated successfully!')
-            return redirect('profile')
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        form_type = request.POST.get('form_type')
 
-    else:
-        u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=request.user.profile)
+        # General Information Update
+        if form_type == 'general':
+            u_form = UserUpdateForm(request.POST, instance=request.user)
+            p_form = ProfileUpdate(request.POST, request.FILES, instance=request.user.profile)
 
+            if u_form.is_valid() and p_form.is_valid():
+                u_form.save()
+                p_form.save()
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Profile updated successfully!',
+                    'user': {
+                        'username': request.user.username,
+                        'email': request.user.email
+                    }
+                })
+            return JsonResponse({
+                'success': False,
+                'errors': {
+                    **u_form.errors.get_json_data(),
+                    **p_form.errors.get_json_data()
+                }
+            }, status=400)
+
+        # Social Links Update
+        elif form_type == 'social':
+            p_form = ProfileUpdate(request.POST, instance=request.user.profile)
+            if p_form.is_valid():
+                p_form.save()
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Social links updated successfully!'
+                })
+            return JsonResponse({
+                'success': False,
+                'errors': p_form.errors.get_json_data()
+            }, status=400)
+
+    # Regular GET
+    u_form = UserUpdateForm(instance=request.user)
+    p_form = ProfileUpdate(instance=request.user.profile)
     return render(request, 'users/UserProfile.html', {
         'u_form': u_form,
         'p_form': p_form,
     })
+
+@login_required
+@require_http_methods(["POST"])
+def avatar_upload(request):
+    if request.FILES.get('image'):
+        profile = request.user.profile
+        profile.image = request.FILES['image']
+        profile.save()
+        return JsonResponse({
+            'success': True,
+            'url': profile.image.url,
+            'message': 'Avatar updated successfully!'
+        })
+    return JsonResponse({
+        'success': False,
+        'error': 'No image uploaded'
+    }, status=400)
+
+@login_required
+def avatar_upload(request):
+    if request.method == 'POST' and request.FILES.get('image'):
+        try:
+            profile = request.user.profile
+            profile.image = request.FILES['image']
+            profile.save()
+            return JsonResponse({
+                'success': True,
+                'url': profile.image.url,
+                'message': 'Avatar updated successfully!'
+            })
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            }, status=400)
+    return JsonResponse({
+        'success': False,
+        'error': 'Invalid request'
+    }, status=400)
 
 def public_profile(request, username):
     user = get_object_or_404(User, username=username)
@@ -200,17 +269,30 @@ def admin_role_requests(request):
     role_requests = RoleRequest.objects.all()
     return render(request, 'admin/role_requests.html', {'role_requests': role_requests})
 
-def avatar_upload(request):
-    if request.method == 'POST' and request.FILES.get('image'):
-        profile = request.user.profile
-        profile.image = request.FILES['image']
-        profile.save()
-        return JsonResponse({'success': True})
-    return JsonResponse({'error': 'Invalid request'}, status=400)
-
 @login_required
 def ecosystem(request):
     profiles = Profile.objects.exclude( role='User')
     context = {'profiles': profiles}
     return render(request, 'users/ecosystem.html', context)
+
+
+def follow(request): 
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        action = request.POST.get('action')
+
+        try:
+            user_to_follow = User.objects.get(id=user_id)
+            if action == 'follow':
+                request.user.profile.following.add(user_to_follow)
+                messages.success(request, f'You are now following {user_to_follow.username}.')
+            elif action == 'unfollow':
+                request.user.profile.following.remove(user_to_follow)
+                messages.success(request, f'You have unfollowed {user_to_follow.username}.')
+            else:
+                messages.error(request, 'Invalid action.')
+        except User.DoesNotExist:
+            messages.error(request, 'User does not exist.')
+
+    return redirect('ecosystem')
 

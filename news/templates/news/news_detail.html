@@ -1,0 +1,166 @@
+{% extends 'blog/base/base.html' %}
+{% load static %}
+
+{% block css_site %}
+    <link rel="stylesheet" href="{% static 'news/news_style.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="mb-6">
+        <a href="{% url 'news' %}" class="inline-flex items-center text-[#9b87f5] hover:text-[#8069e6] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to News
+        </a>
+    </div>
+
+    <article class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-lg">
+        {% if article.image %}
+        <div class="w-full h-80 overflow-hidden">
+            <img src="{{ article.image.url }}" alt="{{ article.title }}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
+        </div>
+        {% endif %}
+        
+        <div class="p-8">
+            <div class="flex flex-wrap justify-between items-start gap-4 mb-6">
+                <div>
+                    <span class="{% if article.category == 'announcement' %}bg-purple-100 text-purple-800{% elif article.category == 'update' %}bg-blue-100 text-blue-800{% else %}bg-green-100 text-green-800{% endif %} text-xs px-3 py-1 rounded-full font-medium inline-block mb-3">
+                        {{ article.get_category_display }}
+                    </span>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{{ article.title }}</h1>
+                    
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="h-12 w-12 rounded-full overflow-hidden border-2 border-[#9b87f5] p-0.5">
+                            <img src="{{ article.author.profile.image.url }}" alt="{{ article.author }}" class="h-full w-full object-cover rounded-full"/>
+                        </div>
+                        <div>
+                            <div class="font-medium text-gray-800">
+                                <a href="{% url 'public-profile' article.author.username %}" class="hover:text-[#9b87f5] transition-colors">{{ article.author }}</a>
+                            </div>
+                            <div class="text-sm text-gray-500">
+                                Published on {{ article.published_date|date:"F d, Y" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-3">
+                    <a href="{% url 'article_update' article.pk %}" class="inline-flex items-center gap-2 bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Edit
+                    </a>
+                    <a href="{% url 'article_delete' article.pk %}" class="inline-flex items-center gap-2 bg-white border border-red-300 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Delete
+                    </a>
+                </div>
+            </div>
+            
+            <div class="prose max-w-none text-gray-700 leading-relaxed article-content">
+                {{ article.content|linebreaks }}
+            </div>
+            
+            <div class="mt-10 pt-6 border-t border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Share this article</h3>
+                <div class="flex gap-3">
+                    <button class="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                        </svg>
+                    </button>
+                    <button class="bg-blue-400 text-white p-2 rounded-full hover:bg-blue-500 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+                        </svg>
+                    </button>
+                    <button class="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                        </svg>
+                    </button>
+                    <button class="bg-blue-700 text-white p-2 rounded-full hover:bg-blue-800 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </article>
+</main>
+
+<style>
+    .article-content p {
+        margin-bottom: 1.5rem;
+    }
+    
+    .article-content a {
+        color: #9b87f5;
+        text-decoration: underline;
+    }
+    
+    .article-content h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .article-content h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .article-content ul, .article-content ol {
+        margin-left: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .article-content li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .article-content blockquote {
+        border-left: 4px solid #9b87f5;
+        padding-left: 1rem;
+        font-style: italic;
+        margin: 1.5rem 0;
+    }
+</style>
+
+<script>
+    // Add fade-in animation for article content
+    document.addEventListener('DOMContentLoaded', function() {
+        const article = document.querySelector('article');
+        article.style.opacity = '0';
+        article.style.transform = 'translateY(20px)';
+        article.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        
+        setTimeout(() => {
+            article.style.opacity = '1';
+            article.style.transform = 'translateY(0)';
+        }, 100);
+        
+        // Add reading progress indicator
+        const progressBar = document.createElement('div');
+        progressBar.className = 'fixed top-0 left-0 h-1 bg-[#9b87f5] z-50';
+        progressBar.style.width = '0%';
+        document.body.appendChild(progressBar);
+        
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            progressBar.style.width = scrollPercent + '%';
+        });
+    });
+</script>
+{% endblock %}

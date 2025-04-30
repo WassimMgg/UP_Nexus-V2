@@ -1,0 +1,412 @@
+{% extends 'blog/base/base.html' %}
+{% load static %}
+
+{% block css_site %}
+    <link rel="stylesheet" href="{% static 'news/news_style.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-gradient-to-b from-gray-900 to-gray-800 py-16 overflow-hidden">
+    <div class="absolute inset-0 opacity-20">
+        <div class="absolute inset-0 bg-[url('{% static 'news/images/news-pattern.svg' %}')] bg-repeat opacity-10"></div>
+    </div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 tracking-tight">
+                <span class="relative inline-block">
+                    News & Updates
+                    <span class="absolute bottom-1 left-0 w-full h-3 bg-[#ffd502] opacity-40 -rotate-1"></span>
+                </span>
+            </h1>
+            <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                Stay informed with the latest announcements, updates, and features from our team.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="{% url 'article_create' %}" class="bg-[#ffd502] text-gray-900 px-8 py-4 rounded-lg font-medium hover:bg-opacity-90 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl flex items-center gap-2 group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform duration-300 group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Create Article
+                </a>
+                <!-- <button id="search-toggle" class="bg-white bg-opacity-20 text-black px-8 py-4 rounded-lg font-medium hover:bg-opacity-30 transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    Search Articles
+                </button> -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search Bar (Hidden by default) -->
+<!-- <div id="search-container" class="bg-gray-100 py-6 hidden">
+    <div class="container mx-auto px-4">
+        <div class="max-w-2xl mx-auto relative">
+            <input type="text" id="searchInput" placeholder="Search articles by title or content..." class="w-full px-5 py-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ffd502] focus:border-transparent pr-12">
+            <button id="clear-search" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</div> -->
+
+<main class="container mx-auto px-4 py-12 max-w-7xl">
+    {% if articles|length > 0 %}
+    
+    <!-- Featured Article Section -->
+    <section class="mb-16">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 relative">
+                <span class="relative z-10">Featured Article</span>
+                <span class="absolute bottom-0 left-0 w-full h-3 bg-[#ffd502]/30 -z-10 transform -rotate-1"></span>
+            </h2>
+        </div>
+        
+        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1">
+            <div class="md:flex">
+                {% if articles.0.image %}
+                <div class="md:w-1/2 h-80 md:h-auto overflow-hidden">
+                    <img src="{{ articles.0.image.url }}" alt="{{ articles.0.title }}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
+                </div>
+                {% endif %}
+                <div class="p-8 md:w-1/2 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center mb-4">
+                            <span class="{% if articles.0.category == 'announcement' %}bg-purple-100 text-purple-800{% elif articles.0.category == 'update' %}bg-blue-100 text-blue-800{% else %}bg-green-100 text-green-800{% endif %} text-xs px-3 py-1 rounded-full font-medium">
+                                {{ articles.0.get_category_display }}
+                            </span>
+                            <span class="ml-2 text-sm text-gray-500">{{ articles.0.published_date|date:"F d, Y" }}</span>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-4 text-gray-800 hover:text-[#ffd502] transition-colors">
+                            <a href="{% url 'article_detail' articles.0.pk %}">{{ articles.0.title }}</a>
+                        </h3>
+                        <p class="text-gray-600 mb-6 line-clamp-3">{{ articles.0.summary }}</p>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="h-10 w-10 rounded-full overflow-hidden border-2 border-[#ffd502] p-0.5">
+                                <img src="{{ articles.0.author.profile.image.url }}" alt="{{ articles.0.author }}" class="h-full w-full object-cover rounded-full"/>
+                            </div>
+                            <div class="font-medium text-gray-800">
+                                <a href="{% url 'public-profile' articles.0.author.username %}" class="hover:text-[#ffd502] transition-colors">{{ articles.0.author }}</a>
+                            </div>
+                        </div>
+                        
+                        <a href="{% url 'article_detail' articles.0.pk %}" class="flex items-center gap-1 text-[#ffd502] font-medium transition-all duration-300 group">
+                            Read More
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Latest News Section -->
+    <section class="mb-16">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 relative">
+                <span class="relative z-10">Latest News</span>
+                <span class="absolute bottom-0 left-0 w-full h-3 bg-[#ffd502]/30 -z-10 transform -rotate-1"></span>
+            </h2>
+            <a href="#all-articles" class="text-[#ffd502] hover:underline font-medium flex items-center gap-1">
+                View All
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for article in articles|slice:"1:4" %}
+            <div class="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 article-card">
+                {% if article.image %}
+                <div class="h-48 overflow-hidden">
+                    <img src="{{ article.image.url }}" alt="{{ article.title }}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                </div>
+                {% endif %}
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="{% if article.category == 'announcement' %}bg-purple-100 text-purple-800{% elif article.category == 'update' %}bg-blue-100 text-blue-800{% else %}bg-green-100 text-green-800{% endif %} text-xs px-2 py-1 rounded-full font-medium">
+                            {{ article.get_category_display }}
+                        </span>
+                        <span class="text-xs text-gray-500">{{ article.published_date|date:"M d, Y" }}</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800 hover:text-[#ffd502] transition-colors line-clamp-2">
+                        <a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a>
+                    </h3>
+                    <p class="text-gray-600 mb-4 line-clamp-3">{{ article.summary }}</p>
+                    <div class="flex justify-between items-center">
+                        <a href="{% url 'article_detail' article.pk %}" class="text-[#ffd502] hover:underline font-medium flex items-center gap-1 group">
+                            Read More
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                        <div class="flex gap-2">
+                            <a href="{% url 'article_update' article.pk %}" class="edit-btn p-2 bg-gray-100 rounded-full hover:bg-[#ffd502] hover:text-white transition-all duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </a>
+                            <a href="{% url 'article_delete' article.pk %}" class="delete-btn p-2 bg-gray-100 rounded-full hover:bg-red-500 hover:text-white transition-all duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    
+    <!-- Categories Section -->
+    <section id="category-filter-section" class="mb-16">
+        <div class="mb-8">
+            <div class="flex flex-wrap gap-3 mb-6">
+                <button data-category="all" class="category-filter active px-4 py-2 rounded-full bg-[#ffd502] text-gray-900">
+                    All Categories
+                </button>
+                {% for code, name in category_choices %}
+                <button data-category="{{ code }}" class="category-filter px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-[#ffd502] hover:text-gray-900 transition">
+                    {{ name }}
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Articles Grid -->
+    <section id="articles" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for article in articles %}
+        <div class="article-card bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition transform hover:-translate-y-1" data-category="{{ article.category }}">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="category-badge text-xs px-2 py-1 rounded-full font-medium {{ article.category|lower }}">{{ article.get_category_display }}</span>
+                    <span class="text-xs text-gray-500">{{ article.published_date|date:"M d, Y" }}</span>
+                </div>
+                {% if article.image %}
+                <div class="mb-4">
+                    <img src="{{ article.image.url }}" alt="{{ article.title }}" class="w-full h-40 object-cover rounded-lg">
+                </div>
+                {% endif %}
+                <h3 class="text-lg font-bold mb-2 hover:text-[#ffd502] transition">
+                    <a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a>
+                </h3>
+                <p class="text-gray-600 mb-4 text-sm line-clamp-2">{{ article.summary }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+    
+    {% else %}
+    <!-- Empty State -->
+    <div class="text-center py-20 bg-white rounded-xl border border-gray-200 shadow-md">
+        <div class="animate-bounce mb-6 inline-block">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+            </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-700 mb-3">No articles found</h3>
+        <p class="text-gray-500 mb-8 max-w-md mx-auto">Be the first to create a news article and share important updates with your community.</p>
+        <a href="{% url 'article_create' %}" class="bg-[#ffd502] text-gray-900 px-8 py-4 rounded-lg font-medium hover:bg-opacity-90 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl inline-flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Create Your First Article
+        </a>
+    </div>
+    {% endif %}
+    
+   <section class="mt-16 bg-gray-900 rounded-2xl overflow-hidden">
+    <div class="md:flex">
+        <div class="md:w-1/2 p-10 md:p-16">
+            <h2 class="text-3xl font-bold text-white mb-4">Subscribe to our Newsletter</h2>
+            <p class="text-gray-300 mb-8">Get the latest news and updates delivered directly to your inbox.</p>
+            <form method="post" action="{% url 'newsletter_subscribe' %}" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <input type="email" name="email" placeholder="Your email address" 
+                           class="w-full px-4 py-3 rounded-lg border border-gray-700 bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-[#ffd502] focus:border-transparent"
+                           required>
+                </div>
+                <button type="submit" class="bg-[#ffd502] text-gray-900 px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-all duration-300 w-full md:w-auto">
+                    Subscribe Now
+                </button>
+            </form>
+        </div>
+        <div class="md:w-1/2 bg-[url('{% static 'news/images/newsletter-bg.jpeg' %}')] bg-cover bg-start h-64 md:h-auto"></div>
+    </div>
+</section>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search functionality
+        const searchToggle = document.getElementById('search-toggle');
+        const searchContainer = document.getElementById('search-container');
+        const searchInput = document.getElementById('searchInput');
+        const clearSearch = document.getElementById('clear-search');
+        
+        searchToggle.addEventListener('click', function() {
+            searchContainer.classList.toggle('hidden');
+            if (!searchContainer.classList.contains('hidden')) {
+                searchInput.focus();
+            }
+        });
+        
+        clearSearch.addEventListener('click', function() {
+            searchInput.value = '';
+            searchInput.focus();
+            filterArticles('');
+        });
+        
+        searchInput.addEventListener('input', function() {
+            const filter = this.value.toLowerCase();
+            filterArticles(filter);
+        });
+        
+        function filterArticles(filter) {
+            document.querySelectorAll('#articles .card').forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const summary = card.querySelector('p').textContent.toLowerCase();
+                
+                if (title.includes(filter) || summary.includes(filter)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+         });
+        
+       document.addEventListener('DOMContentLoaded', function() {
+        // ... existing search functionality code ...
+
+        // Category filtering
+        const categoryButtons = document.querySelectorAll('.category-filter');
+        
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                categoryButtons.forEach(btn => {
+                    btn.classList.remove('active', 'bg-[#ffd502]', 'text-gray-900');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
+                });
+                
+                // Add active class to clicked button
+                this.classList.add('active', 'bg-[#ffd502]', 'text-gray-900');
+                this.classList.remove('bg-gray-200', 'text-gray-700');
+                
+                const category = this.dataset.category;
+                
+                // Filter articles
+                document.querySelectorAll('#articles .article-card').forEach(card => {
+                    if (category === 'all') {
+                        card.style.display = '';
+                    } else {
+                        const articleCategory = card.dataset.category;
+                        if (articleCategory === category) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+        
+        // Animation for articles
+        const articles = document.querySelectorAll('.article-card');
+        articles.forEach((article, index) => {
+            article.style.opacity = '0';
+            article.style.transform = 'translateY(20px)';
+            article.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            
+            setTimeout(() => {
+                article.style.opacity = '1';
+                article.style.transform = 'translateY(0)';
+            }, 100 * index);
+        });
+        
+        // Edit and Delete button animations
+        const editButtons = document.querySelectorAll('.edit-btn');
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        
+        editButtons.forEach(button => {
+            button.addEventListener('mouseover', function() {
+                this.classList.add('animate-wiggle');
+            });
+            
+            button.addEventListener('mouseout', function() {
+                this.classList.remove('animate-wiggle');
+            });
+        });
+        
+        deleteButtons.forEach(button => {
+            button.addEventListener('mouseover', function() {
+                this.classList.add('animate-pulse');
+            });
+            
+            button.addEventListener('mouseout', function() {
+                this.classList.remove('animate-pulse');
+            });
+        });
+    });
+</script>
+
+<style>
+    /* Custom animations for edit and delete buttons */
+    @keyframes wiggle {
+        0% { transform: rotate(0deg); }
+        25% { transform: rotate(10deg); }
+        50% { transform: rotate(-10deg); }
+        75% { transform: rotate(5deg); }
+        100% { transform: rotate(0deg); }
+    }
+    
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-3px) rotate(-2deg); }
+        50% { transform: translateX(3px) rotate(2deg); }
+        75% { transform: translateX(-3px) rotate(-2deg); }
+        100% { transform: translateX(0); }
+    }
+    
+    .animate-wiggle {
+        animation: wiggle 0.5s ease-in-out;
+    }
+    
+    .animate-shake {
+        animation: shake 0.5s ease-in-out;
+    }
+    
+    /* Category filter active state */
+    .category-filter.active {
+        font-weight: 600;
+    }
+    
+    /* Custom styling for the article cards */
+    .article-card {
+        transition: all 0.3s ease;
+    }
+    
+    .article-card:hover .edit-btn,
+    .article-card:hover .delete-btn {
+        opacity: 1;
+    }
+    
+    .edit-btn, .delete-btn {
+        opacity: 0.7;
+    }
+</style>
+{% endblock %}

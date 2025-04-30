@@ -1,0 +1,97 @@
+{% extends "blog/base/base.html" %}
+{% block content %}
+
+<style>
+  .delete-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    padding: 2rem;
+  }
+  .confirmation-box {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 2.5rem;
+    max-width: 600px;
+    width: 100%;
+    border: 1px solid #eaeaea;
+    text-align: center;
+  }
+  .danger-heading {
+    color: #dc3545;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+  .comment-content {
+    color: #2d3748;
+    font-size: 1.4rem;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    word-break: break-word;
+  }
+  .button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  .btn-delete {
+    background: #dc3545;
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    border: none;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  .btn-delete:hover {
+    background: #fff;
+    color: #dc3545;
+    transform: translateY(-1px);
+  }
+  .btn-cancel {
+    text-decoration: none !important;
+    background: #6c757d;
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    border: none;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  .btn-cancel:hover {
+    background: #fff;
+    color: #6c757d;
+    transform: translateY(-1px);
+  }
+</style>
+
+<div class="delete-container">
+  <div class="confirmation-box">
+    <form method="POST">
+      {% csrf_token %}
+      <fieldset>
+        <legend class="danger-heading">Delete Comment</legend>
+        <div class="comment-content">
+          Are you sure you want to delete this comment?
+          <br>
+          <strong>"{{ comment.content|truncatechars:100 }}"</strong>
+        </div>
+      </fieldset>
+      <div class="button-group">
+        <button type="submit" class="btn-delete">Confirm Delete</button>
+        <a href="{% url 'post-detail' comment.post.pk %}" class="btn-cancel">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock content %}

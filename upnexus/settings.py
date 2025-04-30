@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog.apps.BlogConfig',
     'users.apps.UsersConfig',
+    'news',
 ]
 
 MIDDLEWARE = [
@@ -138,7 +139,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'upnexus/static'),
-    os.path.join(BASE_DIR, 'blog/static')
+    os.path.join(BASE_DIR, 'blog/static'),
+    os.path.join(BASE_DIR, 'news/static'),
+    
 ]
 
 # Default primary key field type

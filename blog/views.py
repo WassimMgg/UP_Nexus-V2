@@ -12,6 +12,8 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
 import logging
+from .models import Comment
+from .forms import CommentForm
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +25,27 @@ def home(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    return render(request, 'blog/PostDeatails.html', {'post': post})
+    comments = Comment.objects.filter(post=post, parent=None)
+    form = CommentForm()
+
+    if request.method == 'POST' and request.user.is_authenticated:
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            parent_id = request.POST.get('parent_id')
+            parent_comment = Comment.objects.get(id=parent_id) if parent_id else None
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.user = request.user
+            comment.parent = parent_comment
+            comment.save()
+            return redirect('post-detail', pk=pk)
+
+    context = {
+        'post': post,
+        'comments': comments,
+        'form': form
+    }
+    return render(request, 'blog/PostDeatails.html', context)
 
 @login_required
 def post_create(request):
@@ -87,6 +109,41 @@ def post_delete(request, pk):
         return redirect('announcement')
     return render(request, 'blog/post_confirm_delete.html', {'post': post})
 
+
+@login_required
+def comment_update(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    if comment.user != request.user:
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.mark_edited()         # sets edited_at = now()
+            return redirect('post-detail', pk=comment.post.pk)
+    else:
+        form = CommentForm(instance=comment)
+
+    return render(request, 'blog/comment_form.html', {
+        'form': form,
+        'comment': comment,
+    })
+
+@login_required
+def comment_delete(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    if comment.user != request.user:
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        post_pk = comment.post.pk
+        comment.delete()
+        return redirect('post-detail', pk=post_pk)
+
+    return render(request, 'blog/comment_confirm_delete.html', {
+        'comment': comment,
+    })
 
 @login_required
 def announcement(request):

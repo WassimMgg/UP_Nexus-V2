@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post
+from .models import Post,Comment
 from django.core.exceptions import ValidationError
 
 class PostForm(forms.ModelForm):
@@ -23,3 +23,11 @@ class PostForm(forms.ModelForm):
                 raise ValidationError("End date must be after start date")
         
             return cleaned_data
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Write a comment...'}),
+        }

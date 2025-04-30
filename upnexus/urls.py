@@ -23,6 +23,7 @@ from blog import views as blog_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('register/', user_views.register, name='register'),
     path('login/', user_views.login_view, name='login'),
     path('profile/', user_views.profile, name='profile'),
@@ -36,6 +37,7 @@ urlpatterns = [
     path('approve-role-request/<int:role_request_id>/', user_views.approve_role, name='approve_role_request'),
     path('reject-role-request/<int:role_request_id>/', user_views.reject_role, name='reject_role_request'),
     path('search/', blog_views.search, name='search'),
+    path('news/', include('news.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,6 +1,207 @@
 {% extends "blog/base/base.html" %}
-{% block content %}
+{% load static %}
 
+{% block content %}
+<style>
+  /* Enhanced announcement page styles */
+  .announce-hero {
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    border-radius: 1rem;
+    padding: 3rem 2rem;
+    margin:  auto;
+    max-width: 100%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.8s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .announce-hero::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: rgba(255, 213, 2, 0.1);
+    z-index: 0;
+  }
+  
+  .announce-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .announce-icon {
+    background-color: #ffd502;
+    color: #1a202c;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.5rem;
+    font-size: 1.5rem;
+    box-shadow: 0 10px 15px -3px rgba(255, 213, 2, 0.3);
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  .title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #1a202c;
+    position: relative;
+  }
+  
+  .title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background-color: #ffd502;
+    border-radius: 2px;
+  }
+  
+  .announce-description {
+    color: #4a5568;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    margin: auto;
+    margin-bottom: 2rem;
+    max-width: 1000px;
+    text-align: center;
+    z-index: 1;
+
+  }
+  
+  .btn {
+    background-color: #ffd502;
+    color: #1a202c;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    border: 2px solid #ffd502;
+    text-decoration: none;
+  }
+  
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(255, 213, 2, 0.3);
+  }
+  
+  .btn:active {
+    transform: translateY(-1px);
+  }
+  
+  .section-heading {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a202c;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background-color: #ffd502;
+    border-radius: 2px;
+  }
+  
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+    max-width: 1600px;
+    margin: 0 auto 3rem;
+  }
+  
+  /* Card animation */
+  .card-container > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  
+  /* Filter controls */
+  .filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  
+  .filter-btn {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .filter-btn:hover, .filter-btn.active {
+    background-color: #ffd502;
+    color: #1a202c;
+    transform: translateY(-2px);
+  }
+  
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    background-color: #f9fafb;
+    border-radius: 1rem;
+    margin: 2rem auto;
+    max-width: 600px;
+  }
+  
+  .empty-state-icon {
+    font-size: 3rem;
+    color: #d1d5db;
+    margin-bottom: 1rem;
+  }
+  
+  .empty-state-text {
+    color: #6b7280;
+    font-size: 1.125rem;
+    margin-bottom: 1.5rem;
+  }
+</style>
 
 <section class="announce-hero">
     <div class="announce-header">
@@ -18,25 +219,92 @@
     </p>
    
     {% if user.is_authenticated and user.profile.role != 'User' %}
-    <a href="{% url 'post-create' %}" class="btn">Add new Post</a>
-  {% endif %}
+    <a href="{% url 'post-create' %}" class="btn">
+      <i class="fas fa-plus-circle"></i>
+      Add new Post
+    </a>
+    {% endif %}
+</section>
   
-  </section>
-  
-  <!-- Recent Events Heading -->
-  <div class="container" style="text-align: center; margin: 2rem auto;">
-    <p class="section-heading">Recent Events</p>
+<!-- Filter Controls -->
+<!-- <div class="container" style="max-width: 1200px; margin: 0 auto;">
+  <div class="filter-controls">
+    <button class="filter-btn active" data-filter="all">All Events</button>
+    <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+    <button class="filter-btn" data-filter="past">Past Events</button>
   </div>
-  
-  <!-- Post Cards -->
+</div> -->
 
-  <div class="card-container">
-    {% for post in posts  %}
-     
-      {% include 'blog/includes/PostCard.html'%}
-      
-    {% endfor %}
-   
-    </div>
+<!-- Recent Events Heading -->
+<div class="container" style="text-align: center; margin: 1rem auto;">
+  <p class="section-heading">Recent Events</p>
+</div>
   
-  {% endblock content %}
+<!-- Post Cards -->
+<div class="card-container" id="post-container">
+  {% for post in posts %}
+    {% include 'blog/includes/PostCard.html'%}
+  {% empty %}
+    <div class="empty-state">
+      <div class="empty-state-icon">
+        <i class="fas fa-calendar-times"></i>
+      </div>
+      <p class="empty-state-text">No events found. Check back later for updates!</p>
+      {% if user.is_authenticated and user.profile.role != 'User' %}
+      <a href="{% url 'post-create' %}" class="btn">
+        <i class="fas fa-plus-circle"></i>
+        Create First Event
+      </a>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Animate cards on load
+    const cards = document.querySelectorAll('.card-container > *');
+    cards.forEach((card, index) => {
+      setTimeout(() => {
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, 100 * index);
+    });
+    
+    // Filter functionality
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const currentDate = new Date();
+    
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Update active state
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        
+        const filter = this.dataset.filter;
+        const cards = document.querySelectorAll('.card-container > *:not(.empty-state)');
+        
+        cards.forEach(card => {
+          // Reset visibility first
+          card.style.display = '';
+          
+          // Apply filter if not "all"
+          if (filter !== 'all') {
+            // This is a placeholder - you would need to add data attributes to your cards
+            // with actual event dates to make this work properly
+            const eventDate = card.dataset.date ? new Date(card.dataset.date) : null;
+            
+            if (eventDate) {
+              if (filter === 'upcoming' && eventDate < currentDate) {
+                card.style.display = 'none';
+              } else if (filter === 'past' && eventDate >= currentDate) {
+                card.style.display = 'none';
+              }
+            }
+          }
+        });
+      });
+    });
+  });
+</script>
+{% endblock content %}
